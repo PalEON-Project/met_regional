@@ -38,7 +38,7 @@ for(s in 1:length(pl.sites)){
     yr.dat <- nd.dat[which(floor(nd.dat$year)==y),]
     yr.ppt <- tapply(yr.dat$Amount, yr.dat$doy, sum)
     
-    p.break <- seq(0,300,by=1.0)
+    p.break <- seq(0,1000,by=1.0)
     x.nd <- hist(yr.ppt[yr.ppt>0]*inch2mm,breaks=p.break,plot=FALSE)
     
     if(y==min(nd.yrs)){
@@ -88,8 +88,8 @@ for(s in 1:length(pl.sites)){
         #flip coin with prob based on difference b/w data & model output
         samp <- rbinom(1,1,samp.prob)
         if(samp){
-          dat.yr[which(dat.yr==min(dat.yr[n:(n+1)]))] <- 0
-          dat.yr[which(dat.yr==max(dat.yr[n:(n+1)]))] <- x.sum
+          dat.yr[which(dat.yr[n:(n+1)]==min(dat.yr[n:(n+1)]))+n-1] <- 0
+          dat.yr[which(dat.yr[n:(n+1)]==max(dat.yr[n:(n+1)]))+n-1] <- x.sum
         }
       }
     }
