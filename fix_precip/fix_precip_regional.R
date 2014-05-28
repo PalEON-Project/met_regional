@@ -1,20 +1,36 @@
 #Eliminate small values in the neural network output for precipitation.
-#1. Find daily rainfall distribution based on nearest NADP sites.
+#1. Find daily rainfall distribution based on nearest NADP sites across the PalEON domain.
 #2. Test distribution of PalEON daily rainfall against NADP rainfall.
 #3. Aggregate too-low precip by probability based on difference b/w data and model distributions.
 #Jaclyn Hatala Matthes, 4/10/14
 
 library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
+library(spam,lib.loc="/usr4/spclpgm/jmatthes/")
+library(fields,lib.loc="/usr4/spclpgm/jmatthes/")
+library(sp,lib.loc="/usr4/spclpgm/jmatthes/")
+library(Imap,lib.loc="/usr4/spclpgm/jmatthes/")
+library(date,lib.loc="/usr4/spclpgm/jmatthes/")
+library(chron,lib.loc="/usr4/spclpgm/jmatthes/")
 
 #NADP data to get precip distribution
 nd.path    <- "/projectnb/cheas/paleon/met_regional/fix_precip/nadp/"
-nd.files   <- list.files(nd.path)
-pl.sites   <- c("PHA","PHO","PMB","PUN","PBL","PDL")
-nd.sites   <- c("MA08","ME09","MI09","WI36","MN16","MN16")
+nd.files   <- list.files(paste(nd.path,"allsites/",sep=""))
+
+#list individual NADP sites
+nd.sites <- vector()
+for(f in 1:length(nd.files)){
+  nd.sites[f] <- substring(nd.files[f],1,4)
+}
+
+#get NADP site lat lon
+nd.site.info   <- read.csv(paste(nd.path,"nadp_sites.csv",sep=""),stringsAsFactors=FALSE)
+nd.ind <- which(nd.site.info$siteid %in% nd.sites)
+nd.site.info <- nd.site.info[nd.ind,c(1,7,8)]
 
 #PALEON down-scaled 6-hourly precipitation
-basedir <- "/projectnb/cheas/paleon/met_regional/phase1a_met_drivers_v2/"
-outpath <- "/projectnb/cheas/paleon/met_regional/phase1a_met_drivers_v2/precipf_corr/"
+basedir <- "/projectnb/cheas/paleon/met_regional/phase1b_met_regional/precipf/"
+outpath <- "/projectnb/cheas/paleon/met_regional/phase1b_met_regional/corr_precipf/"
+pl.files <- list.files(basedir)
 beg.yr  <- 850
 end.yr  <- 2010
 n.samps <- 500
@@ -27,8 +43,68 @@ day2sec <- 1/(24*60*60)
 sec26hr <- 60*60*6
 fillv   <- 1e+30
 
-for(s in 6:length(pl.sites)){
-#s <- 3
+for(f in 1:length(pl.files)){ #over monthly down-scaled precip
+  
+  #open down-scaled netcdf file
+  nc.file <- open.ncdf(paste(basedir,pl.files[f],sep=""))
+  data <- get.var.ncdf(nc.file,"precipf")
+  time <- get.var.ncdf(nc.file,"time")
+  lat  <- get.var.ncdf(nc.file,"lat")
+  lon  <- get.var.ncdf(nc.file,"lon")
+  close.ncdf(nc.file)
+  ll.grid <- expand.grid(lon,lat)
+  
+  for(t in 1:length(time)){ #over each 6-hour map
+    dat.vec <- as.vector(data[,,t])
+    new.dat.vec <- rep(NA,length=length(data))
+
+    for(p in 1:length(dat.vec)){ #over each point in map
+      if(!is.na(dat.vec[p])){ #only if point has data
+  
+        #find closest NADP station by latlon great circle distance
+        dist <- gdist(lat.1=nd.site.info$latitude,lon.1=nd.site.info$longitude,lat.2=ll.grid[p,2],lon.2=ll.grid[p,1])
+        near.file <- nd.site.info[which(dist==min(dist)),1]
+        nd.near   <- read.csv(paste(nd.path,"allsites/",nd.files[grep(near.file,nd.files)],sep=""),
+                              header=TRUE,skip=3,stringsAsFactors=FALSE)
+        nd.near <- nd.near[2:nrow(nd.near),] #skip blank line between header and data
+        nd.near[nd.near==-9 | nd.near==-7] <- NA #replace NADP data NA and "trace" values
+        
+        #parse dates
+        nd.year <- nd.mon <- nd.day <- nd.doy <- vector()
+        for(d in 1:nrow(nd.near)){
+            yr.tmp <- strsplit(strsplit(nd.near$EndTime[d]," ")[[1]][1],"/")[[1]][3]
+            nd.year[d] <- as.numeric(if(yr.tmp<20){paste("20",yr.tmp,sep="")}else{paste("19",yr.tmp,sep="")})
+            nd.mon[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d]," ")[[1]][1],"/")[[1]][1])
+            nd.day[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d]," ")[[1]][1],"/")[[1]][2])
+            
+            nd.doy[d] <- julian(nd.mon[d],nd.day[d],nd.year[d],origin=c(month=1,day=1,year=nd.year[d]))+1
+        }
+        
+        nd.near <- cbind(nd.near,nd.year,nd.doy)
+        
+        #calculate mean annual precip frequency distirbution from NADP site
+        nd.yrs <- unique(floor(nd.year))
+        for(y in nd.yrs){
+          yr.dat <- nd.near[which(floor(nd.year)==y),]
+          yr.ppt <- tapply(yr.dat$Amount, yr.dat$doy, sum)
+          
+          p.break <- seq(0,1000,by=1.0)
+          x.nd <- hist(yr.ppt[yr.ppt>0]*inch2mm,breaks=p.break,plot=FALSE)
+          
+          if(y==min(nd.yrs)){
+            nd.agg <- as.vector(x.nd$density)
+          } else{
+            nd.agg <- apply(cbind(nd.agg,as.vector(x.nd$density)),1,mean,na.rm=TRUE)
+          } 
+        }
+        
+        
+      }
+      
+    }
+    
+  }
+  
   nd.dat <- read.csv(paste(nd.path,nd.files[grep(nd.sites[s],nd.files)],sep=""),header=TRUE,skip=2)
   nd.dat[nd.dat==-9 | nd.dat==-7] <- NA #replace NADP data NA & "trace" values
   
