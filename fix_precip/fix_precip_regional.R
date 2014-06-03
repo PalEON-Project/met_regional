@@ -4,20 +4,19 @@
 #3. Aggregate too-low precip by probability based on difference b/w data and model distributions.
 #Jaclyn Hatala Matthes, 4/10/14
 
-library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
-library(spam,lib.loc="/usr4/spclpgm/jmatthes/")
-library(fields,lib.loc="/usr4/spclpgm/jmatthes/")
-library(sp,lib.loc="/usr4/spclpgm/jmatthes/")
-library(Imap,lib.loc="/usr4/spclpgm/jmatthes/")
-library(date,lib.loc="/usr4/spclpgm/jmatthes/")
-library(chron,lib.loc="/usr4/spclpgm/jmatthes/")
-library(abind,lib.loc="/usr4/spclpgm/jmatthes/")
+library(ncdf,lib.loc='/usr4/spclpgm/jmatthes/')
+library(maps,lib.loc='/usr4/spclpgm/jmatthes/')
+library(sp,lib.loc='/usr4/spclpgm/jmatthes/')
+library(Imap,lib.loc='/usr4/spclpgm/jmatthes/')
+library(date,lib.loc='/usr4/spclpgm/jmatthes/')
+library(chron,lib.loc='/usr4/spclpgm/jmatthes/')
+library(abind,lib.loc='/usr4/spclpgm/jmatthes/')
 
-options(warn=-1)
+#options(warn=-1)
 
 #NADP data to get precip distribution
-nd.path    <- "/projectnb/cheas/paleon/met_regional/fix_precip/nadp/"
-nd.files   <- list.files(paste(nd.path,"allsites/",sep=""))
+nd.path    <- '/projectnb/cheas/paleon/met_regional/fix_precip/nadp/'
+nd.files   <- list.files(paste(nd.path,'allsites/',sep=''))
 
 #list individual NADP sites
 nd.sites <- vector()
@@ -26,13 +25,13 @@ for(f in 1:length(nd.files)){
 }
 
 #get NADP site lat lon
-nd.site.info   <- read.csv(paste(nd.path,"nadp_sites.csv",sep=""),stringsAsFactors=FALSE)
+nd.site.info   <- read.csv(paste(nd.path,'nadp_sites.csv',sep=''),stringsAsFactors=FALSE)
 nd.ind <- which(nd.site.info$siteid %in% nd.sites)
 nd.site.info <- nd.site.info[nd.ind,c(1,7,8)]
 
 #PALEON down-scaled 6-hourly precipitation
-basedir <- "/projectnb/cheas/paleon/met_regional/phase1b_met_regional/precipf/"
-outpath <- "/projectnb/cheas/paleon/met_regional/phase1b_met_regional/corr_precipf/"
+basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/precipf/'
+outpath <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/corr_precipf/'
 pl.files <- list.files(basedir)
 beg.yr  <- 850
 end.yr  <- 2010
@@ -53,14 +52,14 @@ for(y in beg.yr:end.yr){
   for(m in 1:12){
     
     #open down-scaled 6-hourly mean precip file for each month
-    year.now  <-sprintf("%4.4i",y)
-    month.now <- sprintf("%2.2i",m)
-    nc.file <- open.ncdf(paste(basedir,"precipf_",
-                               year.now,"_",month.now,".nc",sep=""))
-    data <- get.var.ncdf(nc.file,"precipf")
-    time <- get.var.ncdf(nc.file,"time")
-    lat  <- get.var.ncdf(nc.file,"lat")
-    lon  <- get.var.ncdf(nc.file,"lon")
+    year.now  <-sprintf('%4.4i',y)
+    month.now <- sprintf('%2.2i',m)
+    nc.file <- open.ncdf(paste(basedir,'precipf_',
+                               year.now,'_',month.now,'.nc',sep=''))
+    data <- get.var.ncdf(nc.file,'precipf')
+    time <- get.var.ncdf(nc.file,'time')
+    lat  <- get.var.ncdf(nc.file,'lat')
+    lon  <- get.var.ncdf(nc.file,'lon')
     close.ncdf(nc.file)
     ll.grid <- expand.grid(lon,lat)
     
@@ -85,6 +84,8 @@ for(y in beg.yr:end.yr){
 
   for(p in 1:length(dat.yr[,,1])){ #over each point in map
     
+    print(paste("Point: ",p,sep=""))
+    
     #match indices for that point
     lat.ind <- which(lat==ll.grid[p,2])
     lon.ind <- which(lon==ll.grid[p,1])
@@ -94,18 +95,18 @@ for(y in beg.yr:end.yr){
       #find closest NADP station by latlon great circle distance
       dist <- gdist(lat.1=nd.site.info$latitude,lon.1=nd.site.info$longitude,lat.2=ll.grid[p,2],lon.2=ll.grid[p,1])
       near.file <- nd.site.info[which(dist==min(dist)),1]
-      nd.near   <- read.csv(paste(nd.path,"allsites/",nd.files[grep(near.file,nd.files)],sep=""),
+      nd.near   <- read.csv(paste(nd.path,'allsites/',nd.files[grep(near.file,nd.files)],sep=''),
                             header=TRUE,skip=3,stringsAsFactors=FALSE)
       nd.near <- nd.near[2:nrow(nd.near),] #skip blank line between header and data
-      nd.near[nd.near==-9 | nd.near==-7] <- NA #replace NADP data NA and "trace" values
+      nd.near[nd.near==-9 | nd.near==-7] <- NA #replace NADP data NA and 'trace' values
       
       #parse dates
       nd.year <- nd.mon <- nd.day <- nd.doy <- vector()
       for(d in 1:nrow(nd.near)){
-        yr.tmp <- strsplit(strsplit(nd.near$EndTime[d]," ")[[1]][1],"/")[[1]][3]
-        nd.year[d] <- as.numeric(if(yr.tmp<20){paste("20",yr.tmp,sep="")}else{paste("19",yr.tmp,sep="")})
-        nd.mon[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d]," ")[[1]][1],"/")[[1]][1])
-        nd.day[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d]," ")[[1]][1],"/")[[1]][2])
+        yr.tmp <- strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][3]
+        nd.year[d] <- as.numeric(if(yr.tmp<20){paste('20',yr.tmp,sep='')}else{paste('19',yr.tmp,sep='')})
+        nd.mon[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][1])
+        nd.day[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][2])
         
         nd.doy[d] <- julian(nd.mon[d],nd.day[d],nd.year[d],origin=c(month=1,day=1,year=nd.year[d]))+1
       }
@@ -157,7 +158,7 @@ for(y in beg.yr:end.yr){
       
       dat.vec <- as.vector(dat.yr[lon.ind,lat.ind,])
       if(mean(dat.vec[dat.vec>0])>100 | mean(dat.vec[dat.vec>0])<0.01){
-        print(paste("Warning! Tear: ",y,", Mean: ",mean(dat.vec[dat.vec>0]),sep=""))
+        print(paste('Warning! Tear: ',y,', Mean: ',mean(dat.vec[dat.vec>0]),sep=''))
       }
     } #end loop if data is not NA - otherwise do nothing
   } #end loop over each point
@@ -166,18 +167,18 @@ for(y in beg.yr:end.yr){
   for(m in 1:12){
     
     #need to open file to get time
-    year.now  <-sprintf("%4.4i",y)
-    month.now <- sprintf("%2.2i",m)
-    nc.file   <- open.ncdf(paste(basedir,"precipf_",
-                                 year.now,"_",month.now,".nc",sep=""))
-    data <- get.var.ncdf(nc.file,"precipf")
-    lat <- get.var.ncdf(nc.file,"lat")
-    lon <- get.var.ncdf(nc.file,"lon")
-    nc.time <- get.var.ncdf(nc.file,"time")
+    year.now  <-sprintf('%4.4i',y)
+    month.now <- sprintf('%2.2i',m)
+    nc.file   <- open.ncdf(paste(basedir,'precipf_',
+                                 year.now,'_',month.now,'.nc',sep=''))
+    data <- get.var.ncdf(nc.file,'precipf')
+    lat <- get.var.ncdf(nc.file,'lat')
+    lon <- get.var.ncdf(nc.file,'lon')
+    nc.time <- get.var.ncdf(nc.file,'time')
     close.ncdf(nc.file)
     
     nc_time_units <- paste('days since 0850-01-01 00:00:00', sep='')
-    time          <- dim.def.ncdf("time",nc_time_units,nc.time,unlim=TRUE)
+    time          <- dim.def.ncdf('time',nc_time_units,nc.time,unlim=TRUE)
     if((y%%4==0 & y%%100!=0) | y%%400==0){
       days          <- dpm.l
     } else {
@@ -200,19 +201,19 @@ for(y in beg.yr:end.yr){
     nc_variable_units='kg m-2 s-1'
     
     #make new 6-hourly netCDF file
-    dimY <- dim.def.ncdf( "lat", "latitude: degrees", lat )
-    dimX <- dim.def.ncdf( "lon", "longitude: degrees", lon )
-    dimT <- dim.def.ncdf( "time",nc_time_units, time)
+    dimY <- dim.def.ncdf( 'lat', 'latitude: degrees', lat )
+    dimX <- dim.def.ncdf( 'lon', 'longitude: degrees', lon )
+    dimT <- dim.def.ncdf( 'time',nc_time_units, time)
     
-    nc_var  <- var.def.ncdf("precipf",nc_variable_units,
-                            list(dimX,dimY,time), fillv, longname=nc_variable_long_name,prec="double")
+    nc_var  <- var.def.ncdf('precipf',nc_variable_units,
+                            list(dimX,dimY,time), fillv, longname=nc_variable_long_name,prec='double')
     
-    ofname  <- paste(outpath,"precipf_",sprintf('%04i',y),'_',
-                     sprintf('%02i',m),'.nc',sep="")
+    ofname  <- paste(outpath,'precipf_',sprintf('%04i',y),'_',
+                     sprintf('%02i',m),'.nc',sep='')
     newfile <- create.ncdf(ofname, nc_var) # Initialize file 
     
     att.put.ncdf( newfile, time, 'calendar', 'days since 850')
-    att.put.ncdf( newfile, 0, 'description',"PalEON formatted Phase 1 met driver")
+    att.put.ncdf( newfile, 0, 'description','PalEON formatted Phase 1 met driver')
     
     put.var.ncdf(newfile, nc_var, data.new) # Write netCDF file
     
