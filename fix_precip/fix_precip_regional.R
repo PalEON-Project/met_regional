@@ -5,14 +5,23 @@
 #Jaclyn Hatala Matthes, 4/10/14
 
 library(ncdf,lib.loc='/usr4/spclpgm/jmatthes/')
-library(maps,lib.loc='/usr4/spclpgm/jmatthes/')
-library(sp,lib.loc='/usr4/spclpgm/jmatthes/')
-library(Imap,lib.loc='/usr4/spclpgm/jmatthes/')
+#library(lattice,lib.loc='/usr4/spclpgm/jmatthes/')
+#library(sp,lib.loc='/usr4/spclpgm/jmatthes/')
+#library(Imap,lib.loc='/usr4/spclpgm/jmatthes/')
 library(date,lib.loc='/usr4/spclpgm/jmatthes/')
 library(chron,lib.loc='/usr4/spclpgm/jmatthes/')
 library(abind,lib.loc='/usr4/spclpgm/jmatthes/')
 
-#options(warn=-1)
+# Calculates the geodesic distance between two points specified by radian latitude/longitude using the
+# Spherical Law of Cosines (slc)
+gcd.slc <- function(long1, lat1, long2, lat2) {
+  R <- 6371 # Earth mean radius [km]
+  d <- acos(sin(lat1)*sin(lat2) + cos(lat1)*cos(lat2) * cos(long2-long1)) * R
+  return(d) # Distance in km
+}
+
+# Convert degrees to radians
+deg2rad <- function(deg) return(deg*pi/180)
 
 #NADP data to get precip distribution
 nd.path    <- '/projectnb/cheas/paleon/met_regional/fix_precip/nadp/'
@@ -29,13 +38,30 @@ nd.site.info   <- read.csv(paste(nd.path,'nadp_sites.csv',sep=''),stringsAsFacto
 nd.ind <- which(nd.site.info$siteid %in% nd.sites)
 nd.site.info <- nd.site.info[nd.ind,c(1,7,8)]
 
+#open 1 file to get lat, lon grid for PalEON
+basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/precipf/'
+nc.file <- open.ncdf(paste(basedir,'precipf_0850_01.nc',sep=''))
+data <- get.var.ncdf(nc.file,'precipf')
+time <- get.var.ncdf(nc.file,'time')
+lat  <- get.var.ncdf(nc.file,'lat')
+lon  <- get.var.ncdf(nc.file,'lon')
+close.ncdf(nc.file)
+ll.grid <- expand.grid(lon,lat)
+
+#find nearest NADP station for each grid point
+nearest.nadp <- vector()
+for(p in 1:nrow(ll.grid)){
+  dist <- gcd.slc(deg2rad(nd.site.info$longitude),deg2rad(nd.site.info$latitude),deg2rad(ll.grid[p,1]),deg2rad(ll.grid[p,2]))
+  nearest.nadp[p] <- nd.site.info[which(dist==min(dist)),1]
+}
+
 #PALEON down-scaled 6-hourly precipitation
 basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/precipf/'
 outpath <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/corr_precipf/'
 pl.files <- list.files(basedir)
 beg.yr  <- 850
 end.yr  <- 2010
-n.samps <- 500
+n.samps <- 50
 
 #constants
 dpm   <- c(1,31,28,31,30,31,30,31,31,30,31,30,31) #days per month
@@ -46,7 +72,46 @@ sec26hr <- 60*60*6
 fillv   <- 1e+30
 beg.yr  <- 850
 end.yr  <- 2010
+
+#format NADP data
+nd.daily <- list()
+for(f in 52:length(nd.files)){
+  nd.near   <- read.csv(paste(nd.path,'allsites/',nd.files[f],sep=''),
+                        header=TRUE,skip=3,stringsAsFactors=FALSE)
+  nd.near <- nd.near[2:nrow(nd.near),] #skip blank line between header and data
+  nd.near[nd.near==-9 | nd.near==-7] <- NA #replace NADP data NA and 'trace' values
   
+  #parse dates
+  nd.year <- nd.mon <- nd.day <- nd.doy <- vector()
+  for(d in 1:nrow(nd.near)){
+    yr.tmp <- strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][3]
+    nd.year[d] <- as.numeric(if(yr.tmp<20){paste('20',yr.tmp,sep='')}else{paste('19',yr.tmp,sep='')})
+    nd.mon[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][1])
+    nd.day[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][2])
+    
+    nd.doy[d] <- julian(nd.mon[d],nd.day[d],nd.year[d],origin=c(month=1,day=1,year=nd.year[d]))+1
+  }
+  nd.near <- cbind(nd.near,nd.year,nd.doy)
+  
+  #calculate mean annual precip frequency distribution from NADP site
+  nd.yrs <- unique(floor(nd.year))
+  for(y in nd.yrs){
+    yr.dat <- nd.near[which(floor(nd.year)==y),]
+    yr.ppt <- tapply(yr.dat$Amount, yr.dat$nd.doy, sum)
+    
+    p.break <- seq(0,1000,by=1.0)
+    x.nd <- hist(yr.ppt[yr.ppt>0]*inch2mm,breaks=p.break,plot=FALSE)
+    
+    if(y==min(nd.yrs)){
+      nd.agg <- as.vector(x.nd$density)
+    } else{
+      nd.agg <- apply(cbind(nd.agg,as.vector(x.nd$density)),1,mean,na.rm=TRUE)
+    } 
+  }
+  nd.daily[[f]] <- nd.agg
+}
+
+#loop through data and correct distributions
 for(y in beg.yr:end.yr){
   
   for(m in 1:12){
@@ -89,44 +154,10 @@ for(y in beg.yr:end.yr){
     #match indices for that point
     lat.ind <- which(lat==ll.grid[p,2])
     lon.ind <- which(lon==ll.grid[p,1])
+    ndp.ind <- which(nd.site.info$siteid==nearest.nadp[p])
+    ndp.agg <- nd.daily[[ndp.ind]]
     
     if(!is.na(dat.yr[lon.ind,lat.ind,1])){ #only if point has data
-      
-      #find closest NADP station by latlon great circle distance
-      dist <- gdist(lat.1=nd.site.info$latitude,lon.1=nd.site.info$longitude,lat.2=ll.grid[p,2],lon.2=ll.grid[p,1])
-      near.file <- nd.site.info[which(dist==min(dist)),1]
-      nd.near   <- read.csv(paste(nd.path,'allsites/',nd.files[grep(near.file,nd.files)],sep=''),
-                            header=TRUE,skip=3,stringsAsFactors=FALSE)
-      nd.near <- nd.near[2:nrow(nd.near),] #skip blank line between header and data
-      nd.near[nd.near==-9 | nd.near==-7] <- NA #replace NADP data NA and 'trace' values
-      
-      #parse dates
-      nd.year <- nd.mon <- nd.day <- nd.doy <- vector()
-      for(d in 1:nrow(nd.near)){
-        yr.tmp <- strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][3]
-        nd.year[d] <- as.numeric(if(yr.tmp<20){paste('20',yr.tmp,sep='')}else{paste('19',yr.tmp,sep='')})
-        nd.mon[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][1])
-        nd.day[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][2])
-        
-        nd.doy[d] <- julian(nd.mon[d],nd.day[d],nd.year[d],origin=c(month=1,day=1,year=nd.year[d]))+1
-      }
-      nd.near <- cbind(nd.near,nd.year,nd.doy)
-      
-      #calculate mean annual precip frequency distribution from NADP site
-      nd.yrs <- unique(floor(nd.year))
-      for(y in nd.yrs){
-        yr.dat <- nd.near[which(floor(nd.year)==y),]
-        yr.ppt <- tapply(yr.dat$Amount, yr.dat$nd.doy, sum)
-        
-        p.break <- seq(0,1000,by=1.0)
-        x.nd <- hist(yr.ppt[yr.ppt>0]*inch2mm,breaks=p.break,plot=FALSE)
-        
-        if(y==min(nd.yrs)){
-          nd.agg <- as.vector(x.nd$density)
-        } else{
-          nd.agg <- apply(cbind(nd.agg,as.vector(x.nd$density)),1,mean,na.rm=TRUE)
-        } 
-      }
       
       #correct daily precip frequency distribution
       for(i in 1:n.samps){
@@ -139,10 +170,10 @@ for(y in beg.yr:end.yr){
           
           #probability that the value should be replaced by sum
           #i.e. how far is the sum off from the data distribution
-          if(x.pl$density[x.ind] > nd.agg[x.ind]){
-            samp.prob <- 1 - nd.agg[x.ind]/x.pl$density[x.ind] 
-          } else if(x.pl$density[x.ind] < nd.agg[x.ind]){ 
-            samp.prob <- 1 - x.pl$density[x.ind]/nd.agg[x.ind]
+          if(x.pl$density[x.ind] > ndp.agg[x.ind]){
+            samp.prob <- 1 - ndp.agg[x.ind]/x.pl$density[x.ind] 
+          } else if(x.pl$density[x.ind] < ndp.agg[x.ind]){ 
+            samp.prob <- 1 - x.pl$density[x.ind]/ndp.agg[x.ind]
           }
           
           #flip coin with prob based on difference b/w data & model output
