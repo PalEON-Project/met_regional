@@ -76,8 +76,8 @@ for(s in 1:length(sites)){
         }
         
         # Make a few dimensions we can use
-        dimX <- dim.def.ncdf( "lat", "longitude: degrees", lat )
-        dimY <- dim.def.ncdf( "lon", "latitude: degrees", lon )
+        dimX <- dim.def.ncdf( "lon", "longitude: degrees", lon )
+        dimY <- dim.def.ncdf( "lat", "latitude: degrees", lat )
         dimT <- dim.def.ncdf( "time",nc_time_units, time)
       
         var.nc <- var.def.ncdf(vars[v],nc_variable_units, list(dimX,dimY,dimT), mv,prec="double") #set up variable
