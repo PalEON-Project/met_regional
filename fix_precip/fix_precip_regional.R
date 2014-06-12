@@ -1,13 +1,11 @@
 #Eliminate small values in the neural network output for precipitation.
+#You MUST run format_nadp.R before this code to format the raw NADP site data.
 #1. Find daily rainfall distribution based on nearest NADP sites across the PalEON domain.
 #2. Test distribution of PalEON daily rainfall against NADP rainfall.
 #3. Aggregate too-low precip by probability based on difference b/w data and model distributions.
 #Jaclyn Hatala Matthes, 4/10/14
 
 library(ncdf,lib.loc='/usr4/spclpgm/jmatthes/')
-#library(lattice,lib.loc='/usr4/spclpgm/jmatthes/')
-#library(sp,lib.loc='/usr4/spclpgm/jmatthes/')
-#library(Imap,lib.loc='/usr4/spclpgm/jmatthes/')
 library(date,lib.loc='/usr4/spclpgm/jmatthes/')
 library(chron,lib.loc='/usr4/spclpgm/jmatthes/')
 library(abind,lib.loc='/usr4/spclpgm/jmatthes/')
@@ -27,19 +25,15 @@ deg2rad <- function(deg) return(deg*pi/180)
 nd.path    <- '/projectnb/cheas/paleon/met_regional/fix_precip/nadp/'
 nd.files   <- list.files(paste(nd.path,'allsites/',sep=''))
 
-#list individual NADP sites
-nd.sites <- vector()
-for(f in 1:length(nd.files)){
-  nd.sites[f] <- substring(nd.files[f],1,4)
-}
+#PALEON down-scaled 6-hourly precipitation
+basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional_v2/precipf/'
+outpath <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional_v2/precipf_corr/'
+pl.files <- list.files(basedir)
+beg.yr  <- 850
+end.yr  <- 2010
+n.samps <- 500
 
-#get NADP site lat lon
-nd.site.info   <- read.csv(paste(nd.path,'nadp_sites.csv',sep=''),stringsAsFactors=FALSE)
-nd.ind <- which(nd.site.info$siteid %in% nd.sites)
-nd.site.info <- nd.site.info[nd.ind,c(1,7,8)]
-
-#open 1 file to get lat, lon grid for PalEON
-basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/precipf/'
+#open 1 file to make PalEON mask
 nc.file <- open.ncdf(paste(basedir,'precipf_0850_01.nc',sep=''))
 data <- get.var.ncdf(nc.file,'precipf')
 time <- get.var.ncdf(nc.file,'time')
@@ -47,21 +41,8 @@ lat  <- get.var.ncdf(nc.file,'lat')
 lon  <- get.var.ncdf(nc.file,'lon')
 close.ncdf(nc.file)
 ll.grid <- expand.grid(lon,lat)
-
-#find nearest NADP station for each grid point
-nearest.nadp <- vector()
-for(p in 1:nrow(ll.grid)){
-  dist <- gcd.slc(deg2rad(nd.site.info$longitude),deg2rad(nd.site.info$latitude),deg2rad(ll.grid[p,1]),deg2rad(ll.grid[p,2]))
-  nearest.nadp[p] <- nd.site.info[which(dist==min(dist)),1]
-}
-
-#PALEON down-scaled 6-hourly precipitation
-basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/precipf/'
-outpath <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional/corr_precipf/'
-pl.files <- list.files(basedir)
-beg.yr  <- 850
-end.yr  <- 2010
-n.samps <- 50
+pl.mask <- data[,,1]
+pl.mask[!is.na(pl.mask)] <- 1
 
 #constants
 dpm   <- c(1,31,28,31,30,31,30,31,31,30,31,30,31) #days per month
@@ -70,46 +51,10 @@ inch2mm <- 2.54*10
 day2sec <- 1/(24*60*60)
 sec26hr <- 60*60*6
 fillv   <- 1e+30
-beg.yr  <- 850
-end.yr  <- 2010
+p.break <- seq(0,1000,by=1.0)
 
-#format NADP data
-nd.daily <- list()
-for(f in 52:length(nd.files)){
-  nd.near   <- read.csv(paste(nd.path,'allsites/',nd.files[f],sep=''),
-                        header=TRUE,skip=3,stringsAsFactors=FALSE)
-  nd.near <- nd.near[2:nrow(nd.near),] #skip blank line between header and data
-  nd.near[nd.near==-9 | nd.near==-7] <- NA #replace NADP data NA and 'trace' values
-  
-  #parse dates
-  nd.year <- nd.mon <- nd.day <- nd.doy <- vector()
-  for(d in 1:nrow(nd.near)){
-    yr.tmp <- strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][3]
-    nd.year[d] <- as.numeric(if(yr.tmp<20){paste('20',yr.tmp,sep='')}else{paste('19',yr.tmp,sep='')})
-    nd.mon[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][1])
-    nd.day[d] <- as.numeric(strsplit(strsplit(nd.near$EndTime[d],' ')[[1]][1],'/')[[1]][2])
-    
-    nd.doy[d] <- julian(nd.mon[d],nd.day[d],nd.year[d],origin=c(month=1,day=1,year=nd.year[d]))+1
-  }
-  nd.near <- cbind(nd.near,nd.year,nd.doy)
-  
-  #calculate mean annual precip frequency distribution from NADP site
-  nd.yrs <- unique(floor(nd.year))
-  for(y in nd.yrs){
-    yr.dat <- nd.near[which(floor(nd.year)==y),]
-    yr.ppt <- tapply(yr.dat$Amount, yr.dat$nd.doy, sum)
-    
-    p.break <- seq(0,1000,by=1.0)
-    x.nd <- hist(yr.ppt[yr.ppt>0]*inch2mm,breaks=p.break,plot=FALSE)
-    
-    if(y==min(nd.yrs)){
-      nd.agg <- as.vector(x.nd$density)
-    } else{
-      nd.agg <- apply(cbind(nd.agg,as.vector(x.nd$density)),1,mean,na.rm=TRUE)
-    } 
-  }
-  nd.daily[[f]] <- nd.agg
-}
+#load formatted NADP data saved from format_nadp.R
+load('/projectnb/cheas/paleon/met_regional/fix_precip/NADP_daily.Rdata')
 
 #loop through data and correct distributions
 for(y in beg.yr:end.yr){
@@ -158,6 +103,11 @@ for(y in beg.yr:end.yr){
     ndp.agg <- nd.daily[[ndp.ind]]
     
     if(!is.na(dat.yr[lon.ind,lat.ind,1])){ #only if point has data
+      
+      #replace any NAN with zero
+      if(is.na(mean(dat.yr[lon.ind,lat.ind,]))){
+        dat.yr[lon.ind,lat.ind,which(is.na(dat.yr[lon.ind,lat.ind,]))] <- 0.00000
+      }
       
       #correct daily precip frequency distribution
       for(i in 1:n.samps){
@@ -217,11 +167,27 @@ for(y in beg.yr:end.yr){
     }
     
     #dump all daily precip into old maximum daily 6-hour bin
-    data.new <- rep(0,length(data))
-    for(v in 1:(length(data)/4)){
-      old.ind  <- ((v-1)*4+1):(v*4)
-      yr.ind   <- cumsum(days)[m]:(cumsum(days)[m+1]-1)
-      data.new[which(data==max(data[old.ind]))] <- dat.yr[v+cumsum(days)[m]-1]*day2sec*4
+    data.new <- array(data = 0, dim = dim(data))
+    for(p in 1:length(dat.yr[,,1])){ #over each point in map
+      
+      #match indices for that point
+      lat.ind <- which(lat==ll.grid[p,2])
+      lon.ind <- which(lon==ll.grid[p,1])
+      
+      if(!is.na(dat.yr[lon.ind,lat.ind,1])){
+        #split corrected daily precip into old max bin
+        for(v in 1:(length(data[lon.ind,lat.ind,])/4)){
+          old.ind  <- ((v-1)*4+1):(v*4)
+          yr.ind   <- cumsum(days)[m]:(cumsum(days)[m+1]-1)
+          data.new[lon.ind,lat.ind,which(data[lon.ind,lat.ind,]==max(data[lon.ind,lat.ind,old.ind]))] <- 
+            dat.yr[lon.ind,lat.ind,(v+cumsum(days)[m]-1)]*day2sec*4
+        }
+      }
+    }
+    
+    #mask domain to NAs, leaving zeroes
+    for(v in 1:(length(data[1,1,]))){
+      data.new[,,v] <- data.new[,,v]*pl.mask
     }
     
     #print correct units 
