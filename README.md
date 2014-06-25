@@ -13,10 +13,13 @@ It is simply copied over from /projectnb/cheas/paleon/create_met/R1i1P1/Scripts/
 3. bias_corr/ contains the bias-corrected down-scaled CCSM4 output 
 4. fix_precip/ contains scripts and NADP precip data used to correct the precipitation frequency distribution 
 for Phase 1a and 1b bias-corrected output
-5. phase1a_met_drivers_v#/ are the various versions of met drivers produced throughout the past year - only 
-the most recent version should be used, as this applies all of the relevant corrections.
-6. phase1b_met_regional/ contains the final version of the regional met drivers with all corrections from 
-Phase 1a applied.
+5. phase1a_met_drivers_v4/ is the most recent version - this one is bias-corrected and the precipitation is 
+   adjusted to the disturibution from the NADP dataset.
+6. phase1b_met_regional_v2/ contains the final version of the regional met drivers with all corrections from 
+   Phase 1a applied.
+7. phase1a/1b_old_met_releases/ is a directory that contains old met releases. v1 is the original down-scaled output, 
+   and for Phase 1a, v2 is after timestamps are corrected, v3 is after bias-correction, and v4 is after precipitation 
+   correction.
 
 The processing code steps occurred in the following order:
 
@@ -29,8 +32,12 @@ precipitation distributions based on the 30-year daily measured precipitation at
 
 
 
-These files contain bias-correction and post-processing steps to be executed after the PalEON meteoroglogical downscaling of global circulation model output (past1000 simulation = 850-1850; historic simulation = 1850-2005) to the CRUNCEP timestep and grid (6hr, 0.5-degrees). 
+These files contain bias-correction and post-processing steps to be executed after the PalEON meteoroglogical downscaling of global 
+circulation model output (past1000 simulation = 850-1850; historic simulation = 1850-2005) to the CRUNCEP timestep and grid (6hr, 0.5-degrees). 
 
 
-The bias-correction adjusts the monthly mean of the downscaled GCM output to the monthly mean of CRUNCEP data in the overlapping 1961-1990 period, and then corrects this bias back in time to 850 for radiation, precipitation, and temperature. The bias correction for humidity is slighly different, to account for a large model jump between the past1000 and historic GCM runs. The method for this correction assumes the same monthly means from 1835-1849 and 1850-1864. 
+The bias-correction adjusts the monthly mean of the downscaled GCM output to the monthly mean of CRUNCEP data in the overlapping 1961-1990 
+period, and then corrects this bias back in time to 850 for radiation, precipitation, and temperature. The bias correction for humidity is 
+slighly different, to account for a large model jump between the past1000 and historic GCM runs. The method for this correction assumes the 
+same monthly means from 1835-1849 and 1850-1864. 
 
