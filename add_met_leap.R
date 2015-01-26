@@ -4,7 +4,7 @@
 
 library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
 
-basedir <- "/projectnb/cheas/paleon/met_regional/phase1a_met_drivers/bias_corr/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/bias_corr/"
 
 sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")

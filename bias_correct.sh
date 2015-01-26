@@ -4,16 +4,16 @@
 #Jaclyn Hatala Matthes, 1/14/14
 #jaclyn.hatala.matthes@gmail.com
 
-cru_dir=/projectnb/cheas/paleon/met_regional/cruncep/
-gcm_dir=/projectnb/cheas/paleon/met_regional/ccsm4/
-out_dir=/projectnb/cheas/paleon/met_regional/bias_corr/
+cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
+gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
 
 #vars=(lwdown precipf psurf qair swdown tair wind)
 vars=(lwdown wind)
 
-#cru_dir=/projectnb/cheas/paleon/met_regional/cruncep/
-gcm_dir=/projectnb/cheas/paleon/met_regional/ccsm4/
-out_dir=/projectnb/cheas/paleon/met_regional/bias_corr/
+#cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
+gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
 
 #vars=(lwdown precipf psurf qair swdown tair wind)                                                      
 vars=(lwdown wind)

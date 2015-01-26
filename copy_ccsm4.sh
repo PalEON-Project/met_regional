@@ -1,9 +1,9 @@
 #!bin/bash
 #copy ccsm4 data (850-1900) to directories
 
-ccsm4base=/projectnb/cheas/paleon/met_regional/ccsm4/sites/
-biasbase=/projectnb/cheas/paleon/met_regional/phase1a_met_drivers/bias_corr/
-origbase=/projectnb/cheas/paleon/met_regional/phase1a_met_drivers/original/
+ccsm4base=/projectnb/dietzelab/paleon/met_regional/ccsm4/sites/
+biasbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/bias_corr/
+origbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/original/
 sites=(PMB PUN)
 vars=(lwdown precipf psurf qair swdown tair wind)
 

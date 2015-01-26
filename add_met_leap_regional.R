@@ -5,7 +5,7 @@
 library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
 library(abind,lib.loc="/usr4/spclpgm/jmatthes/")
 
-basedir <- "/projectnb/cheas/paleon/met_regional/phase1b_met_regional/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/phase1b_met_regional/"
 
 #sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")

@@ -4,8 +4,8 @@
 #Jaclyn Hatala Matthes, 1/14/14
 #jaclyn.hatala.matthes@gmail.com
 
-in_dir=/projectnb/cheas/paleon/met_regional/bias_corr/
-out_dir=/projectnb/cheas/paleon/met_regional/bias_corr/sites/
+in_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/sites/
 
 vars=(psurf)
 

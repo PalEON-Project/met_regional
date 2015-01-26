@@ -4,8 +4,8 @@
 #Jaclyn Hatala Matthes, 1/14/14
 #jaclyn.hatala.matthes@gmail.com
 
-in_dir=/projectnb/cheas/paleon/met_regional/cruncep/
-out_dir=/projectnb/cheas/paleon/met_regional/cruncep/sites/
+in_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
+out_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/sites/
 
 vars=(lwdown precipf psurf qair swdown tair wind)
 

@@ -5,10 +5,10 @@
 #Jaclyn Hatala Matthes, 1/22/14
 #jaclyn.hatala.matthes@gmail.com
 
-cru_dir=/projectnb/cheas/paleon/met_regional/cruncep/
-past1000_dir=/projectnb/cheas/paleon/met_regional/ccsm4/ccsm4_past1000/
-hist_dir=/projectnb/cheas/paleon/met_regional/ccsm4/ccsm4_hist/
-out_dir=/projectnb/cheas/paleon/met_regional/bias_corr/
+cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
+past1000_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/ccsm4_past1000/
+hist_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/ccsm4_hist/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
 
 vars=(qair)
 

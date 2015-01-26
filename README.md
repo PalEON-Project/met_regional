@@ -5,9 +5,9 @@ Jaclyn Hatala Matthes, jaclyn.hatala.matthes@gmail.com
 This directory contains the uncorrected, bias-corrected, and final versions of both the site-level PalEON 
 met drivers (Phase 1a) and regional drivers (Phase 1b). 
 
-Directories in /projectnb/cheas/paleon/met_regional/ are as follows:
+Directories in /projectnb/dietzelab/paleon/met_regional/ are as follows:
 1. ccsm4/ contains the copied output from the down-scaled artificial neural network procedure. 
-It is simply copied over from /projectnb/cheas/paleon/create_met/R1i1P1/Scripts/output/ann_all/$VAR/netcdf 
+It is simply copied over from /projectnb/dietzelab/paleon/create_met/R1i1P1/Scripts/output/ann_all/$VAR/netcdf 
 (Bjorn's file processing set-up).
 2. cruncep/ contains the original CRUNCEP driver data downloaded by Bjorn and used to run the ANN procedure.
 3. bias_corr/ contains the bias-corrected down-scaled CCSM4 output 
