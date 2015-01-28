@@ -6,18 +6,18 @@
 
 cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
 gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
-out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly
 
 #vars=(lwdown precipf psurf qair swdown tair wind)
 vars=(lwdown wind)
 
 #cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
-gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
-out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
+#gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
+#out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
 
-#vars=(lwdown precipf psurf qair swdown tair wind)                                                      
-vars=(lwdown wind)
+#vars=(lwdown wind)
 
+vars=(lwdown precipf psurf qair swdown tair wind)                                                      
 #loop over vars and calculate the mean monthly bias b/w CRUNCEP & down-scaled GCM                       
 for var in ${vars[@]}
 do
@@ -26,6 +26,8 @@ do
     cdo cat *.nc ${out_dir}${var}_cru_cat.nc
     cdo seldate,1961-01-01,1990-12-13 ${out_dir}${var}_cru_cat.nc ${out_dir}${var}_cru_yrs.nc
     cdo ymonmean ${out_dir}${var}_cru_yrs.nc ${out_dir}${var}_cru_mmean.nc
+done
+
 #loop over vars and calculate the mean monthly bias b/w CRUNCEP & down-scaled GCM
 for var in ${vars[@]}
 do
@@ -58,4 +60,5 @@ do
     cdo ymonmul ${rvar}_gcm_cat.nc ${rvar}_bias_adj.nc ${rvar}_bias_corr.nc
 done
 
+# Wind has no correction
 popd
