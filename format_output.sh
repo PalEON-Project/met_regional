@@ -4,13 +4,10 @@
 #Jaclyn Hatala Matthes, 1/22/14
 #jaclyn.hatala.matthes@gmail.com
 
-out_dir=/projectnb/cheas/paleon/met_regional/bias_corr/
-yr_dir=/projectnb/cheas/paleon/met_regional/bias_corr/output/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
+yr_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/output/
 vars=(lwdown precipf qair swdown tair)
 
-#First merge the qair bias correction into 1 file
-pushd ${out_dir}
-cdo mergetime qair_*.nc qair_bias_corr.nc
 
 #Make directories for organization
 if [ ! -d ${yr_dir} ]

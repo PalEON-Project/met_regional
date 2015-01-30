@@ -1,6 +1,6 @@
 Information about PalEON met driver processing.
-Jaclyn Hatala Matthes, jaclyn.hatala.matthes@gmail.com
-10 June 2014
+Original: Jaclyn Hatala Matthes, jaclyn.hatala.matthes@gmail.com, 10 June 2014
+Updates: Christy Rollinson, crollinson@gmail.com, January 2015
 
 This directory contains the uncorrected, bias-corrected, and final versions of both the site-level PalEON 
 met drivers (Phase 1a) and regional drivers (Phase 1b). 
@@ -11,6 +11,7 @@ It is simply copied over from /projectnb/dietzelab/paleon/create_met/R1i1P1/Scri
 (Bjorn's file processing set-up).
 2. cruncep/ contains the original CRUNCEP driver data downloaded by Bjorn and used to run the ANN procedure.
 3. bias_corr/ contains the bias-corrected down-scaled CCSM4 output 
+	— bias_corr_original is Jackie’s version that still had a jump in the CRUNCEP splice
 4. fix_precip/ contains scripts and NADP precip data used to correct the precipitation frequency distribution 
 for Phase 1a and 1b bias-corrected output
 5. phase1a_met_drivers_v4/ is the most recent version - this one is bias-corrected and the precipitation is 
@@ -23,7 +24,10 @@ for Phase 1a and 1b bias-corrected output
 
 The processing code steps occurred in the following order:
 1. Bias-correct the CCSM4 ANN down-scaled output with bias_correct.sh, writing the files to bias_corr/regional_monthly/
-	 — these scripts require that you load cdo/1.6.3rc2  (module load cdo/1.6.3rc2)
+	— these scripts require that you load cdo/1.6.3rc2  (module load cdo/1.6.3rc2)
+	- NOTE: psurf & wind do not get bias-correct
+	— NOTE: qair has separate script because it requires a different correction method
+2. Split files back into monthly using format_output.sh
 2. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with bias_corr/regional_monthly/parse_sites.sh
 	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
 3. Use add_met_leap.R to add leap years to February months by repeating Feb 28th.
