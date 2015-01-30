@@ -22,9 +22,10 @@ for Phase 1a and 1b bias-corrected output
    correction.
 
 The processing code steps occurred in the following order:
- — these scripts require that you load cdo/1.6.3rc2  (module load cdo/1.6.3rc2)
 1. Bias-correct the CCSM4 ANN down-scaled output with bias_correct.sh, writing the files to bias_corr/regional_monthly/
+	 — these scripts require that you load cdo/1.6.3rc2  (module load cdo/1.6.3rc2)
 2. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with bias_corr/regional_monthly/parse_sites.sh
+	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
 3. Use add_met_leap.R to add leap years to February months by repeating Feb 28th.
 4. Use rewrite_timestamps.R to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
 5. Use fix_precip/fix_precip.R (for Phase 1a) or fix_precip_regional.R (for Phase 1b) to correct the 
