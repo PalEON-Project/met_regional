@@ -1,22 +1,21 @@
 #!bin/bash
 #copy cruncep data to directories
 
-crubase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/original/sites/
-biasbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/bias_corr/
-origbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/original/
-sites=(PHA PHO PBL PDL PMB PUN)
+crubase=/projectnb/dietzelab/paleon/met_regional/cruncep/
+biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/
+#origbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/original/
+#sites=(PHA PHO PBL PDL PMB PUN)
 vars=(lwdown precipf psurf qair swdown tair wind)
 
-for SITE in ${sites[@]}
-do
-    pushd ${crubase}$SITE
+#for SITE in ${sites[@]}
+#do
+    pushd ${crubase}
     for VAR in ${vars[@]}
     do
-	pushd $VAR
-	cp *.nc ${biasbase}$SITE/$VAR/
-	cp *.nc ${origbase}$SITE/$VAR/
-	popd
+		pushd $VAR
+		cp *.nc ${biasbase}$VAR/
+		popd
     done
     popd 
-done
+#done
 
