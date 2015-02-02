@@ -9,13 +9,13 @@ vars=(psurf wind)
 
 #for SITE in ${sites[@]}
 #do
-  pushd ${ccsm4base}$SITE
+#  pushd ${ccsm4base}$SITE
     for VAR in ${vars[@]}
     do
-		cp ${ccsm4base}$VAR/*_0[0-9][0-9][0-9]_*.nc ${biasbase}$VAR/
-		cp ${ccsm4base}$VAR/*${VAR}*_1[0-8][0-9][0-9]_*.nc ${biasbase}$VAR/
-		cp ${ccsm4base}$VAR/*${VAR}*_1900_*.nc ${biasbase}$VAR
+		cp ${ccsm4base}$VAR/${VAR}_0*.nc ${biasbase}$VAR/
+		cp ${ccsm4base}$VAR/${VAR}_1[0-8][0-9][0-9]_*.nc ${biasbase}$VAR/
+		cp ${ccsm4base}$VAR/${VAR}_1900_*.nc ${biasbase}$VAR
 	done
-  popd
+#  popd
 #done
 
