@@ -8,7 +8,7 @@
 cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
 past1000_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/ccsm4_past1000/
 hist_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/ccsm4_hist/
-out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/
 
 vars=(qair)
 
