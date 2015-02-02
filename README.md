@@ -27,13 +27,14 @@ The processing code steps occurred in the following order:
 	— these scripts require that you load cdo/1.6.3rc2  (module load cdo/1.6.3rc2)
 	- NOTE: psurf & wind do not get bias-correct
 	— NOTE: qair has separate script because it requires a different correction method
-2. Split files back into monthly using format_output.sh
-2. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with bias_corr/regional_monthly/parse_sites.sh
-	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
-3. Use add_met_leap.R to add leap years to February months by repeating Feb 28th.
-4. Use rewrite_timestamps.R to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
-5. Use fix_precip/fix_precip.R (for Phase 1a) or fix_precip_regional.R (for Phase 1b) to correct the 
+2. Split files back into monthly using format_bias_output.sh (requires cdo/1.6.3rc2)
+3. Copy CCSM4 files (surf, wind) and CRUNCEP files (all vars) into final_output folder that houses the current regional data using copy_ccsm4.sh and copy_cruncep.sh
+4. Use add_met_leap.R to add leap years to February months by repeating Feb 28th.
+5. Use rewrite_timestamps.R to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
+6. Use fix_precip/fix_precip.R (for Phase 1a) or fix_precip_regional.R (for Phase 1b) to correct the 
 precipitation distributions based on the 30-year daily measured precipitation at NADP sites (fix_precip/nadp/).
+7. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with bias_corr/regional_monthly/parse_sites.sh
+	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
 
 
 
