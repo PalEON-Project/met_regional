@@ -1,12 +1,12 @@
 #add leap years to PalEON met drivers
-#Jaclyn Hatala Matthes, 1/27/14
-#jaclyn.hatala.matthes@gmail.com
+#Original: Jaclyn Hatala Matthes, 1/27/14, jaclyn.hatala.matthes@gmail.com
+# Edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
-library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
+library(ncdf4)
 
 basedir <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/bias_corr/"
 
-sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
+sites <- c("PHA","PHO","PUN","PBL","PDL","PMB")
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 dpm   <- 29 #leap year days per month
 mv    <- 1e30    # Missing value
