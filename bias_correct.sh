@@ -43,8 +43,8 @@ cdo ymonadd tair_gcm_cat.nc tair_bias.nc tair_bias_corr.nc
 
 #for radiation, humidity, precip, use ratios approach
 echo "---------- Loop 2: Ratio Calculations ----------"
-ratio_vars=(lwdown precipf qair swdown)
-# Wind & psurf has no correction
+ratio_vars=(lwdown precipf swdown)
+# Wind & psurf has no correction; qair has it's own below
 
 for rvar in ${ratio_vars[@]}
 do
