@@ -1,22 +1,22 @@
 #add leap years to PalEON met drivers
-#Jaclyn Hatala Matthes, 1/27/14
-#jaclyn.hatala.matthes@gmail.com
+# original: Jaclyn Hatala Matthes, 1/27/14, jaclyn.hatala.matthes@gmail.com
+# edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
-library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
-library(abind,lib.loc="/usr4/spclpgm/jmatthes/")
+library(ncdf4)
+library(abind)
 
 basedir <- "/projectnb/dietzelab/paleon/met_regional/phase1b_met_regional/"
 
-#sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
+sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 dpm   <- 29 #leap year days per month
 mv    <- 1e30    # Missing value
 
-#for(s in 1:length(sites)){  
-#  print(sites[s])
+for(s in 1:length(sites)){  
+  print(sites[s])
 for(v in 2:length(vars)){
   print(vars[v])
-  files <- list.files(paste(basedir,vars[v],"/",sep=""),pattern = "\\_02.nc$")
+  files <- list.files(paste(basedir,sites[s],"/",vars[v],"/",sep=""),pattern = "\\_02.nc$")
   
   for(f in 1:length(files)){
     tmp  <- strsplit(files[f],"_")
@@ -26,12 +26,12 @@ for(v in 2:length(vars)){
     #test if leap year
     if((year%%4==0 & year%%100!=0) | year%%400==0){
       print("Got here!")
-      nc.file <- open.ncdf(paste(basedir,vars[v],"/",files[f],sep=""))
-      var  <- get.var.ncdf(nc.file,vars[v])
+      nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
+      var  <- ncvar_get(nc.file,vars[v])
       var.new <- abind(var,var[,,109:112],along=3) #copy Feb 28th to 29th
-      lat <- get.var.ncdf(nc.file,"lat")
-      lon <- get.var.ncdf(nc.file,"lon")
-      close.ncdf(nc.file)
+      lat <- ncvar_get(nc.file,"lat")
+      lon <- ncvar_get(nc.file,"lon")
+      nc_close(nc.file)
       
       # Specify time units for this year and month
       nc_time_units=paste('days since ', sprintf('%04i',year), '-',
@@ -77,23 +77,23 @@ for(v in 2:length(vars)){
       }
       
       # Make a few dimensions we can use
-      dimX <- dim.def.ncdf( "lon", "longitude: degrees", lon )
-      dimY <- dim.def.ncdf( "lat", "latitude: degrees", lat )
-      dimT <- dim.def.ncdf( "time",nc_time_units, time)
+      dimX <- ncdim_def( "lon", "longitude: degrees", lon )
+      dimY <- ncdim_def( "lat", "latitude: degrees", lat )
+      dimT <- ncdim_def( "time",nc_time_units, time)
       
-      var.nc <- var.def.ncdf(vars[v],nc_variable_units, list(dimX,dimY,dimT), mv,prec="double") #set up variable
+      var.nc <- ncvar_def(vars[v],nc_variable_units, list(dimX,dimY,dimT), mv,prec="double") #set up variable
       
-      nc <- create.ncdf(paste(basedir,vars[v],"/",files[f],sep=""), list(var.nc) ) # Create the test file
-      put.var.ncdf(nc, var.nc, var.new ) # Write some data to the file
+      nc <- nc_create(paste(basedir,sites[s],"/",vars[v],"/",files[f],sep=""), list(var.nc) ) # Create the test file
+      ncvar_put(nc, var.nc, var.new ) # Write some data to the file
       
       # Add global attributes
-      att.put.ncdf( nc, 0, 'description',"Repeated Feb 28th for leap year")
-      close.ncdf(nc)  
+      ncatt_put( nc, 0, 'description',"Repeated Feb 28th for leap year")
+      nc_close(nc)  
       
     }
   }
 }
-#}
+}
 
 
 
