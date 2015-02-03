@@ -14,27 +14,35 @@ It is simply copied over from /projectnb/dietzelab/paleon/create_met/R1i1P1/Scri
 	— bias_corr_original is Jackie’s version that still had a jump in the CRUNCEP splice
 4. fix_precip/ contains scripts and NADP precip data used to correct the precipitation frequency distribution 
 for Phase 1a and 1b bias-corrected output
-5. phase1a_met_drivers_v4/ is the most recent version - this one is bias-corrected and the precipitation is 
+5. phase1a_met_drivers_v4.1/ is the most recent version - this one is bias-corrected and the precipitation is 
    adjusted to the disturibution from the NADP dataset.
-6. phase1b_met_regional_v2/ contains the final version of the regional met drivers with all corrections from 
+6. phase1b_met_regional_v2.1/ contains the final version of the regional met drivers with all corrections from 
    Phase 1a applied.
 7. phase1a/1b_old_met_releases/ is a directory that contains old met releases. v1 is the original down-scaled output, 
    and for Phase 1a, v2 is after timestamps are corrected, v3 is after bias-correction, and v4 is after precipitation 
    correction.
 
 The processing code steps occurred in the following order:
+(CR note: there are several ways these functions could be parallelized in the future to speed things up)
 1. Bias-correct the CCSM4 ANN down-scaled output with bias_correct.sh, writing the files to bias_corr/regional_monthly/
 	— these scripts require that you load cdo/1.6.3rc2  (module load cdo/1.6.3rc2)
 	- NOTE: psurf & wind do not get bias-correct
 	— NOTE: qair has separate script because it requires a different correction method
 2. Split files back into monthly using format_bias_output.sh (requires cdo/1.6.3rc2)
 3. Copy CCSM4 files (surf, wind) and CRUNCEP files (all vars) into final_output folder that houses the current regional data using copy_ccsm4.sh and copy_cruncep.sh
-4. Use add_met_leap.R to add leap years to February months by repeating Feb 28th.
-5. Use rewrite_timestamps.R to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
-6. Use fix_precip/fix_precip.R (for Phase 1a) or fix_precip_regional.R (for Phase 1b) to correct the 
-precipitation distributions based on the 30-year daily measured precipitation at NADP sites (fix_precip/nadp/).
+4. Use add_met_leap_regional.R to add leap years to February months by repeating Feb 28th.
+5. Use rewrite_timestamps.R (sub submit_rewrite_timestamps.sh) to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
+	— these get written to corr_timestamp, so you need to make this folder & sub-folders for each variable
 7. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with bias_corr/regional_monthly/parse_sites.sh
 	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
+6. Precip Fix
+	6a) Format the price adjustment using fix_precip/format_nadp.R
+	6b) Use fix_precip/fix_precip_sites.R (for Phase 1a) or fix_precip_regional.R (for Phase 1b) to correct the 
+precipitation distributions based on the 30-year daily measured precipitation at NADP sites (fix_precip/nadp/).
+	— NOTE: The region adjust will take 1.5+ days to run
+	— NOTE: current scripts will require you to move the precipf_corr to precipf (precipf becomes precipf_orig) 
+	— NOTE: something is weird with the final adjusted precipf in 1900, so in the next step we will replace ALL VARIABLES in 1900 with the met from 1899.  We need to move everything as a unit so the met files work together & we don’t have a sunny, rainy day with low humidity.
+8. Compress files & do some house keeping (moving & renaming files) using compress_files.sh
 
 
 

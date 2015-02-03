@@ -6,8 +6,8 @@
 
 out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/
 yr_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/
-vars=(lwdown precipf qair swdown tair)
-# note: wind + psurf were not changed, so don't need to be resplit
+vars=(lwdown precipf psurf qair swdown tair)
+# note: wind was not changed, so don't need to be resplit
 
 #First merge the qair bias correction into 1 file
 pushd ${out_dir}

@@ -7,6 +7,7 @@ biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/
 #sites=(PHA PHO PBL PDL PMB PUN)
 vars=(lwdown precipf psurf qair swdown tair wind)
 
+
 #for SITE in ${sites[@]}
 #do
     pushd ${crubase}

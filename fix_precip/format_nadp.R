@@ -1,12 +1,12 @@
 #Format and export the site-level NADP data for PalEON precipitation distribution adjustment 
 #to save time in the processing code (fix_precip_regional.R)
-#Jaclyn Hatala Matthes, jaclyn.hatala.matthes@gmail.com
-#12 June 2014
+#Original: Jaclyn Hatala Matthes, 12 June 2014, jaclyn.hatala.matthes@gmail.com
+#Edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
-library(ncdf,lib.loc='/usr4/spclpgm/jmatthes/')
-library(date,lib.loc='/usr4/spclpgm/jmatthes/')
-library(chron,lib.loc='/usr4/spclpgm/jmatthes/')
-library(abind,lib.loc='/usr4/spclpgm/jmatthes/')
+library(ncdf4)
+library(date)
+library(chron)
+library(abind)
 
 #Calculates the geodesic distance between two points specified by radian latitude/longitude using the
 #Spherical Law of Cosines (slc)
@@ -24,7 +24,7 @@ inch2mm <- 2.54*10
 p.break <- seq(0,1000,by=1.0)
 
 #NADP data to get precip distribution
-nd.path    <- '/projectnb/cheas/paleon/met_regional/fix_precip/nadp/'
+nd.path    <- '/projectnb/dietzelab/paleon/met_regional/fix_precip/nadp/'
 nd.files   <- list.files(paste(nd.path,'allsites/',sep=''))
 
 #list individual NADP sites
@@ -39,13 +39,13 @@ nd.ind <- which(nd.site.info$siteid %in% nd.sites)
 nd.site.info <- nd.site.info[nd.ind,c(1,7,8)]
 
 #open 1 file to get lat, lon grid for PalEON
-basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional_v2/precipf/'
-nc.file <- open.ncdf(paste(basedir,'precipf_0850_01.nc',sep=''))
-data <- get.var.ncdf(nc.file,'precipf')
-time <- get.var.ncdf(nc.file,'time')
-lat  <- get.var.ncdf(nc.file,'lat')
-lon  <- get.var.ncdf(nc.file,'lon')
-close.ncdf(nc.file)
+basedir <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/precipf/'
+nc.file <- nc_open(paste(basedir,'precipf_0850_01.nc',sep=''))
+data <- ncvar_get(nc.file,'precipf')
+time <- ncvar_get(nc.file,'time')
+lat  <- ncvar_get(nc.file,'lat')
+lon  <- ncvar_get(nc.file,'lon')
+nc_close(nc.file)
 ll.grid <- expand.grid(lon,lat)
 
 #find nearest NADP station for each grid point
@@ -79,7 +79,7 @@ for(f in 1:length(nd.files)){
   nd.yrs <- unique(floor(nd.year))
   for(y in nd.yrs){
     yr.dat <- nd.near[which(floor(nd.year)==y),]
-    yr.ppt <- tapply(yr.dat$Amount, yr.dat$nd.doy, sum)
+    yr.ppt <- tapply(yr.dat$Amount, yr.dat$nd.doy, sum, na.rm=T)
     
     p.break <- seq(0,1000,by=1.0)
     x.nd <- hist(yr.ppt[yr.ppt>0]*inch2mm,breaks=p.break,plot=FALSE)
@@ -93,7 +93,7 @@ for(f in 1:length(nd.files)){
   nd.daily[[f]] <- nd.agg
 }
 
-save(nd.daily,nearest.nadp,nd.sites,nd.site.info,file='/projectnb/cheas/paleon/met_regional/fix_precip/NADP_daily.Rdata')
+save(nd.daily,nearest.nadp,nd.sites,nd.site.info,file='/projectnb/dietzelab/paleon/met_regional/fix_precip/NADP_daily.Rdata')
 
 
 

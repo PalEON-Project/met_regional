@@ -2,22 +2,23 @@
 #1. Find daily rainfall distribution based on nearest NADP sites.
 #2. Test distribution of PalEON daily rainfall against NADP rainfall.
 #3. Aggregate too-low precip by probability based on difference b/w data and model distributions.
-#Jaclyn Hatala Matthes, 4/10/14
+#Original: Jaclyn Hatala Matthes, 4/10/14
+#Edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
-library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
+library(ncdf4)
 
 #NADP data to get precip distribution
-nd.path    <- "/projectnb/cheas/paleon/met_regional/fix_precip/nadp/"
+nd.path    <- "/projectnb/dietzelab/paleon/met_regional/fix_precip/nadp/"
 nd.files   <- list.files(nd.path)
 pl.sites   <- c("PHA","PHO","PMB","PUN","PBL","PDL")
 nd.sites   <- c("MA08","ME09","MI09","WI36","MN16","MN16")
 
 #PALEON down-scaled 6-hourly precipitation
-basedir <- "/projectnb/cheas/paleon/met_regional/phase1a_met_drivers_v2/"
-outpath <- "/projectnb/cheas/paleon/met_regional/phase1a_met_drivers_v2/precipf_corr/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.1/"
+outpath <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.1/precipf_corr/"
 beg.yr  <- 850
 end.yr  <- 2010
-n.samps <- 500
+n.samps <- 50
 
 #constants
 dpm   <- c(1,31,28,31,30,31,30,31,31,30,31,30,31) #days per month
@@ -27,7 +28,7 @@ day2sec <- 1/(24*60*60)
 sec26hr <- 60*60*6
 fillv   <- 1e+30
 
-for(s in 6:length(pl.sites)){
+for(s in 1:length(pl.sites)){
 #s <- 3
   nd.dat <- read.csv(paste(nd.path,nd.files[grep(nd.sites[s],nd.files)],sep=""),header=TRUE,skip=2)
   nd.dat[nd.dat==-9 | nd.dat==-7] <- NA #replace NADP data NA & "trace" values
@@ -36,7 +37,7 @@ for(s in 6:length(pl.sites)){
   nd.yrs <- unique(floor(nd.dat$year))
   for(y in nd.yrs){
     yr.dat <- nd.dat[which(floor(nd.dat$year)==y),]
-    yr.ppt <- tapply(yr.dat$Amount, yr.dat$doy, sum)
+    yr.ppt <- tapply(yr.dat$Amount, yr.dat$doy, sum, na.rm=T)
     
     p.break <- seq(0,1000,by=1.0)
     x.nd <- hist(yr.ppt[yr.ppt>0]*inch2mm,breaks=p.break,plot=FALSE)
@@ -53,14 +54,14 @@ for(s in 6:length(pl.sites)){
     for(m in 1:12){
       year.now  <-sprintf("%4.4i",y)
       month.now <- sprintf("%2.2i",m)
-      nc.file <- open.ncdf(paste(basedir,pl.sites[s],
+      nc.file <- nc_open(paste(basedir,pl.sites[s],
                                  "/precipf/",pl.sites[s],"_precipf_",
                                  year.now,"_",month.now,".nc",sep=""))
-      data <- get.var.ncdf(nc.file,"precipf")
-      time <- get.var.ncdf(nc.file,"time")
-      close.ncdf(nc.file)
+      data <- ncvar_get(nc.file,"precipf")
+      time <- ncvar_get(nc.file,"time")
+      nc_close(nc.file)
       
-      dat.mn <- tapply(data*sec26hr, (seq_along(time)-1) %/% 4, sum)
+      dat.mn <- tapply(data*sec26hr, (seq_along(time)-1) %/% 4, sum, na.rm=T)
       
       if(m==1){
         dat.yr <- as.vector(dat.mn)
@@ -76,7 +77,7 @@ for(s in 6:length(pl.sites)){
       if(n!=0 & (n+1)!=0){ #if no adjacent zero values
         x.sum <- dat.yr[n] + dat.yr[n+1]
         x.ind <- which.min(abs(x.pl$mids - x.sum)) #find freq bin
-        
+
         #probability that the value should be replaced by sum
         #i.e. how far is the sum off from the data distribution
         if(x.pl$density[x.ind] > nd.agg[x.ind]){
@@ -95,24 +96,24 @@ for(s in 6:length(pl.sites)){
     }
     
     if(mean(dat.yr[dat.yr>0])>100 | mean(dat.yr[dat.yr>0])<0.01){
-      print(paste("Warning! site: ",pl.sites[s],", year: ",y,", Mean: ",mean(dat.yr[dat.yr>0]),sep=""))
+      print(paste("Warning! site: ",pl.sites[s],", year: ",y,", month: ",m,", Mean: ",mean(dat.yr[dat.yr>0]),sep=""))
     }
     
     #write new 6-hourly netCDF file
     for(m in 1:12){
       year.now  <-sprintf("%4.4i",y)
       month.now <- sprintf("%2.2i",m)
-      nc.file   <- open.ncdf(paste(basedir,pl.sites[s],
+      nc.file   <- nc_open(paste(basedir,pl.sites[s],
                                  "/precipf/",pl.sites[s],"_precipf_",
                                  year.now,"_",month.now,".nc",sep=""))
-      data <- get.var.ncdf(nc.file,"precipf")
-      lat <- get.var.ncdf(nc.file,"lat")
-      lon <- get.var.ncdf(nc.file,"lon")
-      nc.time <- get.var.ncdf(nc.file,"time")
-      close.ncdf(nc.file)
+      data <- ncvar_get(nc.file,"precipf")
+      lat <- ncvar_get(nc.file,"lat")
+      lon <- ncvar_get(nc.file,"lon")
+      nc.time <- ncvar_get(nc.file,"time")
+      nc_close(nc.file)
       
       nc_time_units <- paste('days since 0850-01-01 00:00:00', sep='')
-      time          <- dim.def.ncdf("time",nc_time_units,nc.time,unlim=TRUE)
+      time          <- ncdim_def("time",nc_time_units,nc.time,unlim=TRUE)
       if((y%%4==0 & y%%100!=0) | y%%400==0){
         days          <- dpm.l
       } else {
@@ -135,23 +136,23 @@ for(s in 6:length(pl.sites)){
       nc_variable_units='kg m-2 s-1'
       
       #make new 6-hourly netCDF file
-      dimY <- dim.def.ncdf( "lat", "latitude: degrees", lat )
-      dimX <- dim.def.ncdf( "lon", "longitude: degrees", lon )
-      dimT <- dim.def.ncdf( "time",nc_time_units, time)
+      dimY <- ncdim_def( "lat", "latitude: degrees", lat )
+      dimX <- ncdim_def( "lon", "longitude: degrees", lon )
+#      dimT <- ncdim_def( "time",nc_time_units, time)
       
-      nc_var  <- var.def.ncdf("precipf",nc_variable_units,
+      nc_var  <- ncvar_def("precipf",nc_variable_units,
                               list(dimX,dimY,time), fillv, longname=nc_variable_long_name,prec="double")
       
-      ofname  <- paste(outpath,pl.sites[s],"/",pl.sites[s],"_precipf_",sprintf('%04i',y),'_',
+      ofname  <- paste(basedir,pl.sites[s],"/precipf_corr/",pl.sites[s],"_precipf_",sprintf('%04i',y),'_',
                        sprintf('%02i',m),'.nc',sep="")
-      newfile <- create.ncdf(ofname, nc_var) # Initialize file 
+      newfile <- nc_create(ofname, nc_var) # Initialize file 
       
-      att.put.ncdf( newfile, time, 'calendar', 'days since 850')
-      att.put.ncdf( newfile, 0, 'description',"PalEON formatted Phase 1 met driver")
+	  ncatt_put( newfile, nc_var, 'days since 850', nc.time)
+      ncatt_put( newfile, 0, 'description',"PalEON formatted Phase 1 met driver")
       
-      put.var.ncdf(newfile, nc_var, data.new) # Write netCDF file
+      ncvar_put(newfile, nc_var, data.new) # Write netCDF file
       
-      close.ncdf(newfile)  
+      nc_close(newfile)  
       
     }
 

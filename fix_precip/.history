@@ -1,0 +1,12 @@
+library(date)
+install.packages("date")
+library(ncdf4)#
+library(date)#
+library(chron)#
+library(abind)
+install.packages("chron")
+library(chron)
+>nd.site.info
+?expand.grid
+?rbinom
+?cumsum

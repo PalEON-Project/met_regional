@@ -10,8 +10,6 @@ cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
 gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
 out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/
 
-#vars=(lwdown wind)
-
 vars=(lwdown precipf psurf qair swdown tair wind)                                                      
 
 #loop over vars and calculate the mean monthly bias b/w CRUNCEP & down-scaled GCM
@@ -43,7 +41,7 @@ cdo ymonadd tair_gcm_cat.nc tair_bias.nc tair_bias_corr.nc
 
 #for radiation, humidity, precip, use ratios approach
 echo "---------- Loop 2: Ratio Calculations ----------"
-ratio_vars=(lwdown precipf swdown)
+ratio_vars=(lwdown precipf psurf swdown)
 # Wind & psurf has no correction; qair has it's own below
 
 for rvar in ${ratio_vars[@]}

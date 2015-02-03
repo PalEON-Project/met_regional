@@ -1,48 +1,49 @@
 #correct the PalEON met driver timestamps to a uniform format
-#Jaclyn Hatala Matthes, 3/20/14
-#jaclyn.hatala.matthes@gmail.com
+#Original: Jaclyn Hatala Matthes, 3/20/14, jaclyn.hatala.matthes@gmail.com
+#Edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
-library(ncdf,lib.loc="/usr4/spclpgm/jmatthes/")
+library(ncdf4)
 
-basedir <- "/projectnb/cheas/paleon/met_regional/phase1b_met_regional/"
-outpath <- "/projectnb/cheas/paleon/met_regional/phase1b_met_regional/corr_timestamp/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/"
+outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/"
 
-vars  <- c("precipf","psurf","qair","swdown","tair","wind")
+#vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
+vars  <- "psurf"
 dpm   <- c(31,28,31,30,31,30,31,31,30,31,30,31) #days per month
 dpm.l <- c(31,29,31,30,31,30,31,31,30,31,30,31) #leap year days per month
 mv    <- 1e30    # Missing value
 fillv   <- 1e+30
 
 for(v in 1:length(vars)){
-  print(vars[v])
+  print(paste("--------------------", vars[v], "--------------------", sep=" "))
   files <- list.files(paste(basedir,vars[v],"/",sep=""))
   
   d <- -1
   for(f in 1:length(files)){
-    nc.file <- open.ncdf(paste(basedir,vars[v],"/",files[f],sep=""))
-    data <- get.var.ncdf(nc.file,vars[v])
-    lat <- get.var.ncdf(nc.file,"lat")
-    lon <- get.var.ncdf(nc.file,"lon")
-    close.ncdf(nc.file)
+    nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
+    data <- ncvar_get(nc.file,vars[v])
+    lat <- ncvar_get(nc.file,"lat")
+    lon <- ncvar_get(nc.file,"lon")
+    nc_close(nc.file)
       
     #format time as days since 850-01-01 midnight
     tmp  <- strsplit(files[f],"_")
     year <- as.numeric(tmp[[1]][2])
     mon  <- as.numeric(substring(tmp[[1]][3],1,2))
     print(year)
-    if((year%%4==0 & year%%100!=0) | year%%400==0){
+    if(year%%4==0){ # Leap Year
       nc_time_units <- paste('days since 0850-01-01 00:00:00', sep='')
       t.start       <- d+1
       t.end         <- d+dpm.l[mon]
       nc.time       <- seq(t.start,t.end+0.75,by=0.25)
-      time          <- dim.def.ncdf("time",nc_time_units,nc.time,unlim=TRUE)
+      time          <- ncdim_def("time",nc_time_units,nc.time,unlim=TRUE)
       d <- d + dpm.l[mon]
     } else {
       nc_time_units <- paste('days since 0850-01-01 00:00:00', sep='')
       t.start       <- d+1
       t.end         <- d+dpm[mon]
       nc.time       <- seq(t.start,t.end+0.75,by=0.25)
-      time          <- dim.def.ncdf("time",nc_time_units,nc.time,unlim=TRUE)
+      time          <- ncdim_def("time",nc_time_units,nc.time,unlim=TRUE)
       d <- d + dpm[mon]
     }
  
@@ -83,23 +84,23 @@ for(v in 1:length(vars)){
     }
     
     # Make a few dimensions we can use
-    dimY <- dim.def.ncdf( "lat", "longitude: degrees", lat )
-    dimX <- dim.def.ncdf( "lon", "latitude: degrees", lon )
-    dimT <- dim.def.ncdf( "time",nc_time_units, time)
+    dimY <- ncdim_def( "lat", "longitude: degrees", lat )
+    dimX <- ncdim_def( "lon", "latitude: degrees", lon )
+#    dimT <- ncdim_def( "time",nc_time_units,nc.time,unlim=TRUE)
      
-    nc_var  <- var.def.ncdf(vars[v],nc_variable_units,
+    nc_var  <- ncvar_def(vars[v],nc_variable_units,
                             list(dimX,dimY,time), fillv, longname=nc_variable_long_name,prec="double")
     
     ofname  <- paste(outpath,vars[v],"/",vars[v],"_",sprintf('%04i',year),'_',
                    sprintf('%02i',mon),'.nc',sep="")
-    newfile <- create.ncdf( ofname, nc_var ) # Initialize file 
+    newfile <- nc_create( ofname, nc_var ) # Initialize file 
     
-    att.put.ncdf( newfile, time, 'calendar', 'days since 850')
-    att.put.ncdf( newfile, 0, 'description',"PalEON formatted Phase 1 met driver")
+    ncatt_put( newfile, nc_var, 'days since 850', nc.time)
+    ncatt_put( newfile, 0, 'description',"PalEON formatted Phase 1 met driver")
  
-    put.var.ncdf(newfile, nc_var, data) # Write netCDF file
+    ncvar_put(newfile, nc_var, data) # Write netCDF file
     
-    close.ncdf(newfile)  
+    nc_close(newfile)  
 
   }
 }

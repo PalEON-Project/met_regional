@@ -2,14 +2,42 @@
 #This code loops through files and separates out met data for the 
 #sites: Harvard Forest (PHA), Howland Forest (PHO), UNDERC (PUN)
 #		Billy's Lake (PBL), Demming Lake (PDL), and Minden Bog (PMB)
-#Jaclyn Hatala Matthes, 1/14/14
-#jaclyn.hatala.matthes@gmail.com
+#Original: Jaclyn Hatala Matthes, 1/14/14, jaclyn.hatala.matthes@gmail.com
+#Edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
-in_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/
-out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/sites/
+# NOTE: This extraction was done pre-precip correction for speed
+in_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/
+out_dir=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.1/
 
-vars=(lwdown precipf psurf qair swdown tair wind)                                                      
+#vars=(lwdown precipf qair swdown tair psurf wind)
+vars=(psurf)
+sites=(PHA PHO PUN PBL PDL PMB)
 
+# make site dirs
+if [ ! -d ${out_dir} ]
+then
+    mkdir ${out_dir}
+fi
+pushd ${out_dir}
+
+for site in ${sites[@]}
+do
+if [ ! -d ${site} ]
+then
+    mkdir ${site}
+fi
+
+for var in ${vars[@]}
+do
+if [ ! -d ${out_dir}${site}/${var} ]
+then 
+    mkdir ${out_dir}${site}/${var}/
+fi
+done
+done
+popd
+
+# Extract Bias-Corrected Variables (all time period)
 for var in ${vars[@]}
 do
     pushd ${in_dir}${var}/
@@ -24,8 +52,5 @@ do
 
     done
     popd
-
 done
-
-
 

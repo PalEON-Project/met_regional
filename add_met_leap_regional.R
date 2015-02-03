@@ -5,18 +5,19 @@
 library(ncdf4)
 library(abind)
 
-basedir <- "/projectnb/dietzelab/paleon/met_regional/phase1b_met_regional/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/"
 
-sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
-vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
+#sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
+#vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
+vars  <- c("psurf")
 dpm   <- 29 #leap year days per month
 mv    <- 1e30    # Missing value
 
-for(s in 1:length(sites)){  
-  print(sites[s])
-for(v in 2:length(vars)){
+#for(s in 1:length(sites)){  
+#  print(sites[s])
+for(v in 1:length(vars)){
   print(vars[v])
-  files <- list.files(paste(basedir,sites[s],"/",vars[v],"/",sep=""),pattern = "\\_02.nc$")
+  files <- list.files(paste(basedir,"/",vars[v],"/",sep=""),pattern = "\\_02.nc$")
   
   for(f in 1:length(files)){
     tmp  <- strsplit(files[f],"_")
@@ -24,7 +25,7 @@ for(v in 2:length(vars)){
     print(year)
     
     #test if leap year
-    if((year%%4==0 & year%%100!=0) | year%%400==0){
+    if(year%%4==0){
       print("Got here!")
       nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
       var  <- ncvar_get(nc.file,vars[v])
@@ -83,7 +84,7 @@ for(v in 2:length(vars)){
       
       var.nc <- ncvar_def(vars[v],nc_variable_units, list(dimX,dimY,dimT), mv,prec="double") #set up variable
       
-      nc <- nc_create(paste(basedir,sites[s],"/",vars[v],"/",files[f],sep=""), list(var.nc) ) # Create the test file
+      nc <- nc_create(paste(basedir,"/",vars[v],"/",files[f],sep=""), list(var.nc) ) # Create the test file
       ncvar_put(nc, var.nc, var.new ) # Write some data to the file
       
       # Add global attributes
@@ -93,7 +94,7 @@ for(v in 2:length(vars)){
     }
   }
 }
-}
+#}
 
 
 

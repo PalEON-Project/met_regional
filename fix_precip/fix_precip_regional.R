@@ -3,12 +3,13 @@
 #1. Find daily rainfall distribution based on nearest NADP sites across the PalEON domain.
 #2. Test distribution of PalEON daily rainfall against NADP rainfall.
 #3. Aggregate too-low precip by probability based on difference b/w data and model distributions.
-#Jaclyn Hatala Matthes, 4/10/14
+#Original: Jaclyn Hatala Matthes, 4/10/14
+#Edits: Christy Rollinson, January 2015
 
-library(ncdf,lib.loc='/usr4/spclpgm/jmatthes/')
-library(date,lib.loc='/usr4/spclpgm/jmatthes/')
-library(chron,lib.loc='/usr4/spclpgm/jmatthes/')
-library(abind,lib.loc='/usr4/spclpgm/jmatthes/')
+library(ncdf4)
+library(date)
+library(chron)
+library(abind)
 
 # Calculates the geodesic distance between two points specified by radian latitude/longitude using the
 # Spherical Law of Cosines (slc)
@@ -22,24 +23,24 @@ gcd.slc <- function(long1, lat1, long2, lat2) {
 deg2rad <- function(deg) return(deg*pi/180)
 
 #NADP data to get precip distribution
-nd.path    <- '/projectnb/cheas/paleon/met_regional/fix_precip/nadp/'
+nd.path    <- '/projectnb/dietzelab/paleon/met_regional/fix_precip/nadp/'
 nd.files   <- list.files(paste(nd.path,'allsites/',sep=''))
 
 #PALEON down-scaled 6-hourly precipitation
-basedir <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional_v2/precipf/'
-outpath <- '/projectnb/cheas/paleon/met_regional/phase1b_met_regional_v2/precipf_corr/'
+basedir <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/precipf/'
+outpath <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/precipf_corr/'
 pl.files <- list.files(basedir)
 beg.yr  <- 850
 end.yr  <- 2010
-n.samps <- 500
+n.samps <- 50 # original was 500 (13.5 min/yr), but reduced to 100 for speed (3 min/yr)
 
 #open 1 file to make PalEON mask
-nc.file <- open.ncdf(paste(basedir,'precipf_0850_01.nc',sep=''))
-data <- get.var.ncdf(nc.file,'precipf')
-time <- get.var.ncdf(nc.file,'time')
-lat  <- get.var.ncdf(nc.file,'lat')
-lon  <- get.var.ncdf(nc.file,'lon')
-close.ncdf(nc.file)
+nc.file <- nc_open(paste(basedir,'precipf_0850_01.nc',sep=''))
+data <- ncvar_get(nc.file,'precipf')
+time <- ncvar_get(nc.file,'time')
+lat  <- ncvar_get(nc.file,'lat')
+lon  <- ncvar_get(nc.file,'lon')
+nc_close(nc.file)
 ll.grid <- expand.grid(lon,lat)
 pl.mask <- data[,,1]
 pl.mask[!is.na(pl.mask)] <- 1
@@ -54,7 +55,7 @@ fillv   <- 1e+30
 p.break <- seq(0,1000,by=1.0)
 
 #load formatted NADP data saved from format_nadp.R
-load('/projectnb/cheas/paleon/met_regional/fix_precip/NADP_daily.Rdata')
+load('/projectnb/dietzelab/paleon/met_regional/fix_precip/NADP_daily.Rdata')
 
 #loop through data and correct distributions
 for(y in beg.yr:end.yr){
@@ -64,13 +65,13 @@ for(y in beg.yr:end.yr){
     #open down-scaled 6-hourly mean precip file for each month
     year.now  <-sprintf('%4.4i',y)
     month.now <- sprintf('%2.2i',m)
-    nc.file <- open.ncdf(paste(basedir,'precipf_',
+    nc.file <- nc_open(paste(basedir,'precipf_',
                                year.now,'_',month.now,'.nc',sep=''))
-    data <- get.var.ncdf(nc.file,'precipf')
-    time <- get.var.ncdf(nc.file,'time')
-    lat  <- get.var.ncdf(nc.file,'lat')
-    lon  <- get.var.ncdf(nc.file,'lon')
-    close.ncdf(nc.file)
+    data <- ncvar_get(nc.file,'precipf')
+    time <- ncvar_get(nc.file,'time')
+    lat  <- ncvar_get(nc.file,'lat')
+    lon  <- ncvar_get(nc.file,'lon')
+    nc_close(nc.file)
     ll.grid <- expand.grid(lon,lat)
     
     #convert 6-hourly mean to daily sums
@@ -150,16 +151,16 @@ for(y in beg.yr:end.yr){
     #need to open file to get time
     year.now  <-sprintf('%4.4i',y)
     month.now <- sprintf('%2.2i',m)
-    nc.file   <- open.ncdf(paste(basedir,'precipf_',
+    nc.file   <- nc_open(paste(basedir,'precipf_',
                                  year.now,'_',month.now,'.nc',sep=''))
-    data <- get.var.ncdf(nc.file,'precipf')
-    lat <- get.var.ncdf(nc.file,'lat')
-    lon <- get.var.ncdf(nc.file,'lon')
-    nc.time <- get.var.ncdf(nc.file,'time')
-    close.ncdf(nc.file)
+    data <- ncvar_get(nc.file,'precipf')
+    lat <- ncvar_get(nc.file,'lat')
+    lon <- ncvar_get(nc.file,'lon')
+    nc.time <- ncvar_get(nc.file,'time')
+    nc_close(nc.file)
     
     nc_time_units <- paste('days since 0850-01-01 00:00:00', sep='')
-    time          <- dim.def.ncdf('time',nc_time_units,nc.time,unlim=TRUE)
+    time          <- ncdim_def('time',nc_time_units,nc.time,unlim=TRUE)
     if((y%%4==0 & y%%100!=0) | y%%400==0){
       days          <- dpm.l
     } else {
@@ -198,23 +199,23 @@ for(y in beg.yr:end.yr){
     nc_variable_units='kg m-2 s-1'
     
     #make new 6-hourly netCDF file
-    dimY <- dim.def.ncdf( 'lat', 'latitude: degrees', lat )
-    dimX <- dim.def.ncdf( 'lon', 'longitude: degrees', lon )
-    dimT <- dim.def.ncdf( 'time',nc_time_units, time)
+    dimY <- ncdim_def( 'lat', 'latitude: degrees', lat )
+    dimX <- ncdim_def( 'lon', 'longitude: degrees', lon )
+#    dimT <- ncdim_def( 'time',nc_time_units, time)
     
-    nc_var  <- var.def.ncdf('precipf',nc_variable_units,
+    nc_var  <- ncvar_def('precipf',nc_variable_units,
                             list(dimX,dimY,time), fillv, longname=nc_variable_long_name,prec='double')
     
     ofname  <- paste(outpath,'precipf_',sprintf('%04i',y),'_',
                      sprintf('%02i',m),'.nc',sep='')
-    newfile <- create.ncdf(ofname, nc_var) # Initialize file 
+    newfile <- nc_create(ofname, nc_var) # Initialize file 
     
-    att.put.ncdf( newfile, time, 'calendar', 'days since 850')
-    att.put.ncdf( newfile, 0, 'description','PalEON formatted Phase 1 met driver')
+    ncatt_put( newfile, nc_var, 'days since 850', nc.time)
+    ncatt_put( newfile, 0, 'description','PalEON formatted Phase 1 met driver')
     
-    put.var.ncdf(newfile, nc_var, data.new) # Write netCDF file
+    ncvar_put(newfile, nc_var, data.new) # Write netCDF file
     
-    close.ncdf(newfile)  
+    nc_close(newfile)  
     
   }
 }
