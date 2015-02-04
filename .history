@@ -1,0 +1,7 @@
+library(ncdf4)
+?ncvar_att
+?ncvar_put
+?ncatt_put
+library(ncdf4)
+?ncdim_def
+?ncatt_put

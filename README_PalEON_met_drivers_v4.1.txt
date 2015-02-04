@@ -10,3 +10,4 @@ About PalEON Met Drivers
 About version 4.1
 - Previous version distributed to PalEON modeling group was supposed to be bias-dusted, but the wrong files were distributed
 - Version 4.1 repeated the bias-adjustment process with a few slight modifications (see github)
+- Precip was odd (almost nonexistent) in 1900, so this year repeats all met drivers from 1899 to prevent oddities that would arise from adjusting precip alone
