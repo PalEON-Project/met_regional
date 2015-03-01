@@ -25,7 +25,7 @@ for(v in 1:length(vars)){
     print(year)
     
     #test if leap year
-    if(year%%4==0){
+      if((year%%4==0 & year%%100!=0) | year%%400==0){
       print("Got here!")
       nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
       var  <- ncvar_get(nc.file,vars[v])

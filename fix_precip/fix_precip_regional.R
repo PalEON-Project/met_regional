@@ -30,7 +30,8 @@ nd.files   <- list.files(paste(nd.path,'allsites/',sep=''))
 basedir <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/precipf/'
 outpath <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/precipf_corr/'
 pl.files <- list.files(basedir)
-beg.yr  <- 850
+#beg.yr  <- 850
+beg.yr  <- 1582
 end.yr  <- 2010
 n.samps <- 50 # original was 500 (13.5 min/yr), but reduced to 100 for speed (3 min/yr)
 
