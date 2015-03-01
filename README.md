@@ -29,7 +29,7 @@ The processing code steps occurred in the following order:
 	- NOTE: psurf & wind do not get bias-correct
 	— NOTE: qair has separate script because it requires a different correction method
 2. Split files back into monthly using format_bias_output.sh (requires cdo/1.6.3rc2)
-3. Copy CCSM4 files (surf, wind) and CRUNCEP files (all vars) into final_output folder that houses the current regional data using copy_ccsm4.sh and copy_cruncep.sh
+3. Copy CCSM4 files (wind) and CRUNCEP files (all vars) into final_output folder that houses the current regional data using copy_ccsm4.sh and copy_cruncep.sh
 4. Use add_met_leap_regional.R to add leap years to February months by repeating Feb 28th.
 5. Use rewrite_timestamps.R (sub submit_rewrite_timestamps.sh) to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
 	— these get written to corr_timestamp, so you need to make this folder & sub-folders for each variable

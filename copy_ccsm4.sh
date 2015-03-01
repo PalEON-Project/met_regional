@@ -5,7 +5,7 @@ ccsm4base=/projectnb/dietzelab/paleon/met_regional/ccsm4/
 biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/
 #origbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/original/
 #sites=(PMB PUN)
-vars=(psurf wind)
+vars=(wind)
 
 #for SITE in ${sites[@]}
 #do
