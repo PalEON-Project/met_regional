@@ -26,8 +26,7 @@ The processing code steps occurred in the following order:
 (CR note: there are several ways these functions could be parallelized in the future to speed things up)
 1. Bias-correct the CCSM4 ANN down-scaled output with bias_correct.sh, writing the files to bias_corr/regional_monthly/
 	— these scripts require that you load cdo/1.6.3rc2  (module load cdo/1.6.3rc2)
-	- NOTE: psurf & wind do not get bias-correct
-	— NOTE: qair has separate script because it requires a different correction method
+	- NOTE: wind does not get bias-correct because it’s really funky
 2. Split files back into monthly using format_bias_output.sh (requires cdo/1.6.3rc2)
 3. Copy CCSM4 files (wind) and CRUNCEP files (all vars) into final_output folder that houses the current regional data using copy_ccsm4.sh and copy_cruncep.sh
 4. Use add_met_leap_regional.R to add leap years to February months by repeating Feb 28th.

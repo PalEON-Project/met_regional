@@ -6,6 +6,8 @@
 # Edited by Christy Rollinson Jan 2015
 # crollinson@gmail.com
 
+module load cdo/1.6.3rc2
+
 cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
 gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
 out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/

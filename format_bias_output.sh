@@ -9,6 +9,8 @@ yr_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/
 vars=(lwdown precipf psurf qair swdown tair)
 # note: wind was not changed, so don't need to be resplit
 
+module load cdo/1.6.3rc2
+
 #First merge the qair bias correction into 1 file
 pushd ${out_dir}
 echo "---------- Merge qair into 1 file ----------"
