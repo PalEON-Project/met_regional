@@ -27,7 +27,7 @@ for(s in 1:length(sites)){
         print("Got here!")
         nc.file <- open.ncdf(paste(basedir,sites[s],"/",vars[v],"/",files[f],sep=""))
         var  <- get.var.ncdf(nc.file,vars[v])
-        var.new <- c(var,var[109:112]) #copy Feb 28th to 29th
+        var.new <- c(var[1:112],var[109:112]) #copy Feb 28th to 29th
         lat <- get.var.ncdf(nc.file,"lat")
         lon <- get.var.ncdf(nc.file,"lon")
         close.ncdf(nc.file)

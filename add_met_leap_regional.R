@@ -29,7 +29,7 @@ for(v in 1:length(vars)){
       print("Got here!")
       nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
       var  <- ncvar_get(nc.file,vars[v])
-      var.new <- abind(var,var[,,109:112],along=3) #copy Feb 28th to 29th
+      var.new <- abind(var[,,1:112],var[,,109:112],along=3) #copy Feb 28th to 29th
       lat <- ncvar_get(nc.file,"lat")
       lon <- ncvar_get(nc.file,"lon")
       nc_close(nc.file)
