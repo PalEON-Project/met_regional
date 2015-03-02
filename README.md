@@ -20,7 +20,8 @@ for Phase 1a and 1b bias-corrected output
    Phase 1a applied.
 7. phase1a/1b_old_met_releases/ is a directory that contains old met releases. v1 is the original down-scaled output, 
    and for Phase 1a, v2 is after timestamps are corrected, v3 is after bias-correction, and v4 is after precipitation 
-   correction.
+   correction.  v4.1 is after re-running the bias correction (all var + precip) and v4.2 is after correcting a leap 
+   year error in v4.1
 
 The processing code steps occurred in the following order:
 (CR note: there are several ways these functions could be parallelized in the future to speed things up)
