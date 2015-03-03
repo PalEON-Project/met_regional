@@ -14,7 +14,7 @@ module load cdo/1.6.3rc2
 #First merge the qair bias correction into 1 file
 pushd ${out_dir}
 echo "---------- Merge qair into 1 file ----------"
-#cdo mergetime qair_*_corr.nc qair_bias_corr.nc
+cdo mergetime qair_*_corr.nc qair_bias_corr.nc
 
 #Make directories for organization
 if [ ! -d ${yr_dir} ]
