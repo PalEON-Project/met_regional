@@ -7,8 +7,7 @@ library(ncdf4)
 basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/"
 outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/"
 
-#vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
-vars  <- "psurf"
+vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 dpm   <- c(31,28,31,30,31,30,31,31,30,31,30,31) #days per month
 dpm.l <- c(31,29,31,30,31,30,31,31,30,31,30,31) #leap year days per month
 mv    <- 1e30    # Missing value
