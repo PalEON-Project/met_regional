@@ -31,12 +31,12 @@ The processing code steps occurred in the following order:
 2. Split files back into monthly using format_bias_output.sh (requires cdo/1.6.3rc2)
 3. Copy CCSM4 files (wind) and CRUNCEP files (all vars) into final_output folder that houses the current regional data using copy_ccsm4.sh and copy_cruncep.sh
 4. Use add_met_leap_regional.R to add leap years to February months by repeating Feb 28th.
-5. Use rewrite_timestamps.R (sub submit_rewrite_timestamps.sh) to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
+5. Use rewrite_timestamps.R (qsub submit_rewrite_timestamps.sh) to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
 	— these get written to corr_timestamp, so you need to make this folder & sub-folders for each variable
-7. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with bias_corr/regional_monthly/parse_sites.sh
+7. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with parse_sites.sh
 	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
 6. Precip Fix
-	6a) Format the price adjustment using fix_precip/format_nadp.R
+	6a) Format the precip adjustment using fix_precip/format_nadp.R
 	6b) Use fix_precip/fix_precip_sites.R (for Phase 1a) or fix_precip_regional.R (for Phase 1b) to correct the 
 precipitation distributions based on the 30-year daily measured precipitation at NADP sites (fix_precip/nadp/).
 	— NOTE: The region adjust will take 1.5+ days to run

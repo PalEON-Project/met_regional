@@ -8,8 +8,7 @@ library(abind)
 basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/"
 
 #sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
-#vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
-vars  <- c("psurf")
+vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 dpm   <- 29 #leap year days per month
 mv    <- 1e30    # Missing value
 

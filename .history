@@ -5,3 +5,6 @@ library(ncdf4)
 library(ncdf4)
 ?ncdim_def
 ?ncatt_put
+d <- -1
+time          <- ncdim_def("time",nc_time_units,nc.time,unlim=TRUE)
+d <- d + dpm[mon]

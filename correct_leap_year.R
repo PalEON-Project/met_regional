@@ -4,22 +4,28 @@
 
 library(ncdf4)
 
-basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/"
-outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.1/"
+outpath <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.2/"
+
+
 
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
+sites <- c("PBL", "PDL", "PHA", "PHO", "PMB", "PUN")
 dpm   <- c(31,28,31,30,31,30,31,31,30,31,30,31) #days per month
 dpm.l <- c(31,29,31,30,31,30,31,31,30,31,30,31) #leap year days per month
 mv    <- 1e30    # Missing value
 fillv   <- 1e+30
 
+for(s in 1:length(sites)){
+  print(paste("----------------------", sites[s], "----------------------", sep=" "))
+
 for(v in 1:length(vars)){
-  print(paste("--------------------", vars[v], "--------------------", sep=" "))
-  files <- list.files(paste(basedir,vars[v],"/",sep=""))
+  print(paste("    --------------", vars[v], "--------------    ", sep=" "))
+  files <- list.files(file.path(basedir, sites[s], vars[v]))
   
   d <- -1
   for(f in 1:length(files)){
-    nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
+    nc.file <- nc_open(file.path(basedir, sites[s], vars[v],files[f]))
     data <- ncvar_get(nc.file,vars[v])
     lat <- ncvar_get(nc.file,"lat")
     lon <- ncvar_get(nc.file,"lon")
@@ -27,8 +33,8 @@ for(v in 1:length(vars)){
       
     #format time as days since 850-01-01 midnight
     tmp  <- strsplit(files[f],"_")
-    year <- as.numeric(tmp[[1]][2])
-    mon  <- as.numeric(substring(tmp[[1]][3],1,2))
+    year <- as.numeric(tmp[[1]][3])
+    mon  <- as.numeric(substring(tmp[[1]][4],1,2))
     print(year)
     if((year%%4==0 & year%%100!=0) | year%%400==0){ # Leap Year
 	  print(paste("-- Leap Year! --", sep=""))
@@ -36,6 +42,7 @@ for(v in 1:length(vars)){
       t.start       <- d+1
       t.end         <- d+dpm.l[mon]
       nc.time       <- seq(t.start,t.end+0.75,by=0.25)
+	  data 			<- data[1:length(nc.time)]
       time          <- ncdim_def("time",nc_time_units,nc.time,unlim=TRUE)
       d <- d + dpm.l[mon]
     } else {
@@ -43,6 +50,7 @@ for(v in 1:length(vars)){
       t.start       <- d+1
       t.end         <- d+dpm[mon]
       nc.time       <- seq(t.start,t.end+0.75,by=0.25)
+	  data 			<- data[1:length(nc.time)]      
       time          <- ncdim_def("time",nc_time_units,nc.time,unlim=TRUE)
       d <- d + dpm[mon]
     }
@@ -104,5 +112,4 @@ for(v in 1:length(vars)){
 
   }
 }
-
-
+}

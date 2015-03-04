@@ -5,12 +5,12 @@
 #Original: Jaclyn Hatala Matthes, 1/14/14, jaclyn.hatala.matthes@gmail.com
 #Edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
+module load nco/4.3.4
 # NOTE: This extraction was done pre-precip correction for speed
 in_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/
-out_dir=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.1/
+out_dir=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.2/
 
-#vars=(lwdown precipf qair swdown tair psurf wind)
-vars=(psurf)
+vars=(lwdown precipf qair swdown tair psurf wind)
 sites=(PHA PHO PUN PBL PDL PMB)
 
 # make site dirs
