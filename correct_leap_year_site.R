@@ -10,7 +10,8 @@ outpath <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.2/"
 
 
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
-sites <- c("PBL", "PDL", "PHA", "PHO", "PMB", "PUN")
+#sites <- c("PBL", "PDL", "PHA", "PHO", "PMB", "PUN")
+sites <- c("PDL", "PHA", "PHO", "PMB", "PUN")
 dpm   <- c(31,28,31,30,31,30,31,31,30,31,30,31) #days per month
 dpm.l <- c(31,29,31,30,31,30,31,31,30,31,30,31) #leap year days per month
 mv    <- 1e30    # Missing value
@@ -18,6 +19,7 @@ fillv   <- 1e+30
 
 for(s in 1:length(sites)){
   print(paste("----------------------", sites[s], "----------------------", sep=" "))
+	if(sites[s]=="PDL") vars <- "wind" else vars = c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 
 for(v in 1:length(vars)){
   print(paste("    --------------", vars[v], "--------------    ", sep=" "))
@@ -99,7 +101,7 @@ for(v in 1:length(vars)){
     nc_var  <- ncvar_def(vars[v],nc_variable_units,
                             list(time), fillv, longname=nc_variable_long_name,prec="double")
     
-    ofname  <- file.path(outpath, sites[s], vars[v],paste(vars[v],"_",sprintf('%04i',year),'_',
+    ofname  <- file.path(outpath, sites[s], vars[v],paste(sites[s], "_", vars[v],"_",sprintf('%04i',year),'_',
                    sprintf('%02i',mon),'.nc',sep=""))
     newfile <- nc_create( ofname, nc_var ) # Initialize file 
     

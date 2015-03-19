@@ -1,4 +1,7 @@
 .history
+.Rapp.history
+**/.history
+**/.Rapp.history
 bias_corr/  
 bias_corr_original/  
 ccsm4/  

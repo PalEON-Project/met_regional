@@ -3,8 +3,9 @@
 
 library(ncdf4)
 sites <- c("PHA", "PHO", "PUN", "PBL", "PDL", "PMB")
-vars <- c("lwdown", "precipf", "precipf_corr", "psurf", "qair", "swdown", "tair", "wind")
-dir <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.1"
+vars <- c("lwdown", "precipf", "psurf", "qair", "swdown", "tair", "wind")
+dir <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.2"
+figdir <- "/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.2/Met_Check_Figures"
 
 for(s in unique(sites)){
 	paste0("---------- ", s, " ----------")
@@ -27,7 +28,7 @@ for(s in unique(sites)){
 	    for(i in 1:length(mos)){
 	    		temp2 <- c(temp2, mean(temp[mos[i]:(mos[i]+11)]))
 	    }
-		pdf(file=paste0(dir,"/",s,"_",v,"_yr.pdf"))	
+		pdf(file=paste0(figdir,"/",s,"_",v,"_yr.pdf"))	
 		plot(temp2, type="l", lwd=2, xlab="Yrs since 850", ylab=v)
 		dev.off()
 	}
