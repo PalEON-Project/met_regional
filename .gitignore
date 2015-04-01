@@ -34,6 +34,6 @@ phase1b_met_regional/corr_precipf/
 
 .history
 
-.Rapp.history
+**.Rapp.history
 
 *.history
