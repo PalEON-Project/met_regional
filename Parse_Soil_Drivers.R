@@ -35,6 +35,20 @@ plot(sites, pch=19)
 plot(soils[[1]], add=T, legend=)
 plot(sites, add=T, pch=19)
 
+oc.top <- raster("~/Desktop/NACP_MSTMIP_UNIFIED_NA_SOIL_MA/data/Unified_NA_Soil_Map_Topsoil_Organic_Carbon.tif")
+oc.sub <- raster("~/Desktop/NACP_MSTMIP_UNIFIED_NA_SOIL_MA/data/Unified_NA_Soil_Map_Subsoil_Organic_Carbon.tif")
+
+sites.oc.top <- extract(oc.top, sites, method="bilinear")
+sites.oc.sub <- extract(oc.sub, sites, method="bilinear")
+
+plot(sites, pch=19)
+plot(oc.top, add=T)
+plot(sites, pch=19, add=T, cex=1.5)
+
+plot(sites, pch=19)
+plot(oc.sub, add=T)
+plot(sites, pch=19, add=T, cex=1.5)
+
 
 # Extracting N Deposition for the sites 
 soils.sites <- data.frame(t(extract(soils, sites, method="simple")))
