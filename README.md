@@ -1,9 +1,9 @@
 Information about PalEON met driver processing.
 Original: Jaclyn Hatala Matthes, jaclyn.hatala.matthes@gmail.com, 10 June 2014
-Updates: Christy Rollinson, crollinson@gmail.com, January 2015
+Updates: Christy Rollinson, crollinson@gmail.com, January 2015, September 2015
 
 This directory contains the uncorrected, bias-corrected, and final versions of both the site-level PalEON 
-met drivers (Phase 1a) and regional drivers (Phase 1b). 
+met drivers (Phase 1a) and regional drivers (Phase 2, formerly Phase 1b). 
 
 Directories in /projectnb/dietzelab/paleon/met_regional/ are as follows:
 1. ccsm4/ contains the copied output from the down-scaled artificial neural network procedure. 
@@ -33,8 +33,6 @@ The processing code steps occurred in the following order:
 4. Use add_met_leap_regional.R to add leap years to February months by repeating Feb 28th.
 5. Use rewrite_timestamps.R (qsub submit_rewrite_timestamps.sh) to rewrite the timestamps and to make sure they are continuous days since 0850-01-01
 	— these get written to corr_timestamp, so you need to make this folder & sub-folders for each variable
-7. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with parse_sites.sh
-	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
 6. Precip Fix
 	6a) Format the precip adjustment using fix_precip/format_nadp.R
 	6b) Use fix_precip/fix_precip_sites.R (for Phase 1a) or fix_precip_regional.R (for Phase 1b) to correct the 
@@ -42,6 +40,8 @@ precipitation distributions based on the 30-year daily measured precipitation at
 	— NOTE: The region adjust will take 1.5+ days to run
 	— NOTE: current scripts will require you to move the precipf_corr to precipf (precipf becomes precipf_orig) 
 	— NOTE: something is weird with the final adjusted precipf in 1900, so in the next step we will replace ALL VARIABLES in 1900 with the met from 1899.  We need to move everything as a unit so the met files work together & we don’t have a sunny, rainy day with low humidity.
+7. Extract sites from regional bias-corrected files to bias_corr/regional_monthly/sites/ with parse_sites.sh
+	 — these scripts require you to load nco/4.3.4 (module load nco/4.3.4)
 8. Compress files & do some house keeping (moving & renaming files) using compress_files.sh
 
 

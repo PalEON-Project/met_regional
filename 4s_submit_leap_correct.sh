@@ -8,5 +8,5 @@
 #$ -l h_rt=48:00:00
 #$ -N FixLeap
 #cd /projectnb/dietzelab/paleon/met_regional/
-sh make_leap_correct_dirs.sh
-R CMD BATCH correct_leap_year_site.R
+# sh make_leap_correct_dirs.sh
+R CMD BATCH 4_add_met_leap_regional.R

@@ -10,7 +10,7 @@ module load cdo/1.6.3rc2
 
 cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
 gcm_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/
-out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly_v2_v2/
 
 vars=(lwdown precipf psurf qair swdown tair wind)                                                      
 
@@ -69,7 +69,7 @@ echo "---------- Loop 3: Specific Humidity ----------"
 cru_dir=/projectnb/dietzelab/paleon/met_regional/cruncep/
 past1000_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/ccsm4_past1000/
 hist_dir=/projectnb/dietzelab/paleon/met_regional/ccsm4/ccsm4_hist/
-out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly_v2/
 
 vars=(qair)
 

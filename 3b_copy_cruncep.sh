@@ -2,7 +2,7 @@
 #copy cruncep data to directories
 
 crubase=/projectnb/dietzelab/paleon/met_regional/cruncep/
-biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/
+biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/
 #origbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/original/
 #sites=(PHA PHO PBL PDL PMB PUN)
 vars=(lwdown precipf psurf qair swdown tair wind)

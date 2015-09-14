@@ -1,7 +1,7 @@
 #!bin/bash
 # This file makes the directories for the corrected leap year
 
-out_dir=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.2/
+out_dir=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.3/
 
 vars=(lwdown precipf qair swdown tair psurf wind)
 sites=(PHA PHO PUN PBL PDL PMB)

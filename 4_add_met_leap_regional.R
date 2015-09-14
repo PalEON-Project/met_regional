@@ -5,7 +5,7 @@
 library(ncdf4)
 library(abind)
 
-basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/"
 
 #sites <- c("PBL","PHA","PHO","PUN","PDL","PMB")
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")

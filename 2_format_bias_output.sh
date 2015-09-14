@@ -4,8 +4,8 @@
 #Original: Jaclyn Hatala Matthes, 1/22/14, jaclyn.hatala.matthes@gmail.com
 #Edits: Christy Rollinson, January 2015, crollinson@gmail.com
 
-out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly/
-yr_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/
+out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly_v2/
+yr_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/
 vars=(lwdown precipf psurf qair swdown tair)
 # note: wind was not changed, so don't need to be resplit
 

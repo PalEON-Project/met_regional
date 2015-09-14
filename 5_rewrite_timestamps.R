@@ -4,8 +4,8 @@
 
 library(ncdf4)
 
-basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/"
-outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/"
+outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
 
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 dpm   <- c(31,28,31,30,31,30,31,31,30,31,30,31) #days per month

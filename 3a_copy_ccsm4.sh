@@ -2,7 +2,7 @@
 #copy ccsm4 data (850-1900) for non-bias corrected variables to directories
 
 ccsm4base=/projectnb/dietzelab/paleon/met_regional/ccsm4/
-biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output/
+biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/
 #origbase=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers/original/
 #sites=(PMB PUN)
 vars=(wind)

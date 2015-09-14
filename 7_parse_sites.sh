@@ -7,8 +7,8 @@
 
 module load nco/4.3.4
 # NOTE: This extraction was done pre-precip correction for speed
-in_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp/
-out_dir=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.2/
+in_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/
+out_dir=/projectnb/dietzelab/paleon/met_regional/phase1a_met_drivers_v4.3/
 
 vars=(lwdown precipf qair swdown tair psurf wind)
 sites=(PHA PHO PUN PBL PDL PMB)
