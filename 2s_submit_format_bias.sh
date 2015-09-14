@@ -8,4 +8,4 @@
 #$ -l h_rt=12:00:00
 #$ -N FormatBias
 #cd /projectnb/dietzelab/paleon/met_regional/
-sh format_bias_output.sh
+sh 2_format_bias_output.sh

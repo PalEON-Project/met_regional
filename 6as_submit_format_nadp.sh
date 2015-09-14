@@ -8,4 +8,4 @@
 #$ -l h_rt=12:00:00
 #$ -N NADP
 #cd /projectnb/dietzelab/paleon/met_regional/fix_precip/
-R CMD BATCH format_nadp.R
+R CMD BATCH 6a_format_nadp.R

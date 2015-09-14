@@ -8,4 +8,4 @@
 #$ -l h_rt=48:00:00
 #$ -N FixPrecip
 #cd /projectnb/dietzelab/paleon/met_regional/fix_precip/
-R CMD BATCH fix_precip_regional.R
+R CMD BATCH 6b_fix_precip_regional.R
