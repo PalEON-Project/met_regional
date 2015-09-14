@@ -7,6 +7,12 @@ biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/
 #sites=(PMB PUN)
 vars=(wind)
 
+
+if [ ! -d ${biasbase}$VAR ]
+then
+    mkdir ${biasbase}$VAR
+fi
+
 #for SITE in ${sites[@]}
 #do
 #  pushd ${ccsm4base}$SITE
