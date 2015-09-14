@@ -8,16 +8,16 @@ biasbase=/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/
 vars=(wind)
 
 
-if [ ! -d ${biasbase}$VAR ]
-then
-    mkdir ${biasbase}$VAR
-fi
-
 #for SITE in ${sites[@]}
 #do
 #  pushd ${ccsm4base}$SITE
     for VAR in ${vars[@]}
     do
+		if [ ! -d ${biasbase}$VAR ]
+			then 
+	    	mkdir ${biasbase}$VAR
+		fi
+
 		cp ${ccsm4base}$VAR/${VAR}_0*.nc ${biasbase}$VAR/
 		cp ${ccsm4base}$VAR/${VAR}_1[0-8][0-9][0-9]_*.nc ${biasbase}$VAR/
 		cp ${ccsm4base}$VAR/${VAR}_1900_*.nc ${biasbase}$VAR
