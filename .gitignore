@@ -32,14 +32,10 @@ phase1b_met_regional/corr_precipf/
 *~
 #*
 
-.history
-
 **.Rapp.history
 
 *.history
 
-.history
-
-*.history
-
-*.history
+met_examples/
+met_qaqc/
+*.gif

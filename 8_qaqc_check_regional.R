@@ -1,0 +1,148 @@
+# ----------------------------------------------
+# Script to do some QA/QC on the regional (Phase 2) PalEON met Driver Data
+# Christine Rollinson, crollinson@gmail.com
+# Original: 14 September, 2015
+#
+# --------------
+# QA/QC Checks
+# --------------
+# Region-Level:
+# Note: This set will probably use parallel processing to: 
+#       1) speed things up; 
+#       2) provide an example of raster parallelzation in R for others to use
+# A) Animated Maps (upload to web)
+#    1) Monthly Means -- Entire PalEON Temporal & Spatial Domain
+#    2) Diurnal Cycle -- 1 year (mean of tempororal domain?)
+# B) Static Maps (for QA/QC document)
+#    1) Annual Means  -- spinup (1850-1869); modern climate (1980-2010)
+#    3) Monthly Means -- mean of entire temporal domain
+# 
+# Random Site Checks (10? random points)
+# 1) 6-hrly, full time range
+# 2) Monthly means, full time range
+# 3) Annual means, full time range
+# --------------
+#
+# ----------------------------------------------
+
+
+# ----------------------------------------------
+# Load libaries, Set up Directories, etc
+# ----------------------------------------------
+library(raster); library(animation)
+library(ncdf4); library(ggplot2); library(grid)
+dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
+dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/met_qaqc"
+
+if(!dir.exists(dir.out)) dir.create(dir.out)
+
+vars         <- "tair" # Variables we're graphing
+
+# window for graphing monthly means
+yr.start.mo  <- 1845 
+yr.end.mo    <- 1855
+
+# window for graphing daily pattern
+yr.start.day <- 2010
+yr.end.day   <- 2010
+
+temp.range    <- seq(from=240, to=290, length.out=50)
+paleon.states <- map_data("state")
+
+
+# ----------------------------------------------
+
+
+# ----------------------------------------------
+# Read in & graph by variable
+# ----------------------------------------------
+# v="tair"
+for(v in vars){
+	# Definining our file paths
+	dir.var <- file.path(dir.met, v)	
+	var.files <- dir(dir.var)
+	nchar.v <- nchar(v)
+	
+	# ---------------------
+	# Working 1 file at a time to calculating and graph the monthly mean
+	# ---------------------
+	# Getting just the years for the time frame we're interested in
+	files.graph <-	var.files[which(as.numeric(substr(var.files, nchar.v+2,nchar.v+5))>=yr.start.mo & as.numeric(substr(var.files, nchar.v+2,nchar.v+5))<=yr.end.mo)]
+
+
+	saveGIF( {  for(i in 1:length(files.graph)){
+	print(paste0("---- ", files.graph[i], " ----"))
+	ncT <- stack(file.path(dir.var, files.graph[i]))
+
+    tmp  <- strsplit(files.graph[i],"_")
+    year <- tmp[[1]][2]
+    mon  <- substring(tmp[[1]][3],1,2)
+	# ncT
+	# summary(ncT)
+	# class(ncT)
+	# names(ncT)
+	# dim(ncT)
+
+	ncT.x1 <- mean(ncT)
+	ncT.x <- data.frame(rasterToPoints(ncT.x1))
+	# ncTx.pt <- data.frame(rasterToPoints(test))
+	names(ncT.x) <- c("lon", "lat", "tair")
+	# summary(test.pt)
+	
+	# plot(test)
+
+	print(
+	ggplot(data=ncT.x) +
+		geom_raster(aes(x=lon, y=lat, fill=tair)) +
+		scale_fill_gradientn(colours=c("blue", "red"), limits=c(240, 330)) +
+		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
+		scale_x_continuous(limits=range(ncT.x$lon), expand=c(0,0), name="Longitude") +
+		scale_y_continuous(limits=range(ncT.x$lat), expand=c(0,0), name="Latitude") +
+		ggtitle(paste(year, mon, sep=" - ")) +
+		# borders("state") +
+		coord_equal(ratio=1))}}, movie.name=file.path(dir.out, paste0(v, "_MonthMean", "_", yr.start.mo, "-", yr.end.mo, ".gif")), interval=0.3, nmax=10000)
+	# ---------------------
+
+	# # ---------------------
+	# # Working 1 file at a time to graph the raw sub-daily drivers
+	# # ---------------------
+	# # Getting just the years for the time frame we're interested in
+	# files.graph <-	var.files[which(as.numeric(substr(var.files, nchar.v+2,nchar.v+5))>=yr.start.day & as.numeric(substr(var.files, nchar.v+2,nchar.v+5))<=yr.end.day)]
+
+
+	# saveGIF( {  for(i in 1:length(files.graph)){
+	# print(paste0("---- ", files.graph[i], " ----"))
+	# ncT <- stack(file.path(dir.var, files.graph[i]))
+
+    # tmp  <- strsplit(files.graph[i],"_")
+    # year <- tmp[[1]][2]
+    # mon  <- substring(tmp[[1]][3],1,2)
+	# # ncT
+	# # summary(ncT)
+	# # class(ncT)
+	# # names(ncT)
+	# # dim(ncT)
+
+	# ncT.x1 <- mean(ncT)
+	# ncT.x <- data.frame(rasterToPoints(ncT.x1))
+	# # ncTx.pt <- data.frame(rasterToPoints(test))
+	# names(ncT.x) <- c("lon", "lat", "tair")
+	# # summary(test.pt)
+	
+	# # plot(test)
+	# for(y in 1:nlayer){
+	 	# print(
+	# ggplot(data=ncT.x[[i]]) +
+		# geom_raster(aes(x=lon, y=lat, fill=tair)) +
+		# scale_fill_gradientn(colours=c("blue", "red"), limits=c(240, 330)) +
+		# geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
+		# scale_x_continuous(limits=range(ncT.x$lon), expand=c(0,0), name="Longitude") +
+		# scale_y_continuous(limits=range(ncT.x$lat), expand=c(0,0), name="Latitude") +
+		# ggtitle(paste(year, mon, sep=" - ")) +
+		# # borders("state") +
+		# coord_equal(ratio=1))	
+	# }
+	# }}, movie.name=file.path(dir.out, paste0(v, "_SubDailyRaw", "_", yr.start.day, "-", yr.end.day, "." ".gif")), interval=0.3, nmax=10000)
+	# # ---------------------
+
+}
