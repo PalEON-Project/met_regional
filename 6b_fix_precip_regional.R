@@ -33,8 +33,8 @@ outpath <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2
 if(!dir.exists(outpath)) dir.create(outpath)
 
 pl.files <- list.files(basedir)
-#beg.yr  <- 850
-beg.yr  <- 1582
+beg.yr  <- 850
+# beg.yr  <- 1582
 end.yr  <- 2010
 n.samps <- 50 # original was 500 (13.5 min/yr), but reduced to 100 for speed (3 min/yr)
 
@@ -63,7 +63,7 @@ load('/projectnb/dietzelab/paleon/met_regional/fix_precip/NADP_daily.Rdata')
 
 #loop through data and correct distributions
 for(y in beg.yr:end.yr){
-  
+  print(paste(" --- Year : "), y, sep="")
   for(m in 1:12){
     
     #open down-scaled 6-hourly mean precip file for each month
@@ -99,7 +99,7 @@ for(y in beg.yr:end.yr){
 
   for(p in 1:length(dat.yr[,,1])){ #over each point in map
     
-    print(paste("Point: ",p,sep=""))
+    # print(paste("Point: ",p,sep=""))
     
     #match indices for that point
     lat.ind <- which(lat==ll.grid[p,2])
@@ -151,7 +151,7 @@ for(y in beg.yr:end.yr){
   
   #write new 6-hourly netCDF file for each month
   for(m in 1:12){
-    
+    print(paste0("    - Month : ", m))
     #need to open file to get time
     year.now  <-sprintf('%4.4i',y)
     month.now <- sprintf('%2.2i',m)
