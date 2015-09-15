@@ -29,6 +29,9 @@ nd.files   <- list.files(paste(nd.path,'allsites/',sep=''))
 #PALEON down-scaled 6-hourly precipitation
 basedir <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/precipf/'
 outpath <- '/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/precipf_corr/'
+
+if(!dir.exists(outpath)) dir.create(outpath)
+
 pl.files <- list.files(basedir)
 #beg.yr  <- 850
 beg.yr  <- 1582
