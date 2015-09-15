@@ -39,3 +39,5 @@ phase1b_met_regional/corr_precipf/
 met_examples/
 met_qaqc/
 *.gif
+ Met_Check_Figures/
+*.pdf

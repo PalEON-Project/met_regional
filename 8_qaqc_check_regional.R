@@ -36,7 +36,8 @@ dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v
 
 if(!dir.exists(dir.out)) dir.create(dir.out)
 
-vars         <- c("tair", "precipf_corr", "swdown", "lwdown", "qair", "psurf", "wind") # Variables we're graphing
+# Variables we're graphing
+vars         <- c("tair", "precipf_corr", "swdown", "lwdown", "qair", "psurf", "wind") 
 
 # window for graphing monthly means
 yr.start.mo  <- 1800
@@ -48,7 +49,9 @@ yr.end.day1   <- 0850
 yr.start.day2 <- 2010
 yr.end.day2   <- 2010
 
-temp.range    <- seq(from=240, to=290, length.out=50)
+# ranges.month  <- data.frame(var=vars, Min=c(240,0,100,0,0,0,90000,0), Max=(330,250,500,4000,0.025,0,102000,15))
+ranges.month  <- data.frame(var=vars, Min=c(240,0,100,0,0,0,90000,0), Max=(330,250,600,5000,0.025,0,110000,35))
+ranges.day    <- data.frame(var=vars, Min=c(240,0,0,0,0,0,90000,0), Max=(330,250,1000,5000,0.025,0,110000,35))
 paleon.states <- map_data("state")
 
 
@@ -96,7 +99,7 @@ for(v in vars){
 	print(
 	ggplot(data=ncT.x) +
 		geom_raster(aes(x=lon, y=lat, fill=tair)) +
-		scale_fill_gradientn(colours=c("blue", "red"), limits=c(240, 330)) +
+		scale_fill_gradientn(colours=c("blue", "red"), limits=c(ranges.month[ranges.month$var==v,"Min"], ranges.month[ranges.month$var==v,"Max"])) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(ncT.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(ncT.x$lat), expand=c(0,0), name="Latitude") +
@@ -130,7 +133,7 @@ for(v in vars){
 	 	print(
 	ggplot(data=ncT.x) +
 		geom_raster(aes(x=lon, y=lat, fill=tair)) +
-		scale_fill_gradientn(colours=c("blue", "red"), limits=c(240, 330)) +
+		scale_fill_gradientn(colours=c("blue", "red"), limits=c(ranges.day[ranges.day$var==v,"Min"], ranges.day[ranges.day$var==v,"Max"])) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(ncT.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(ncT.x$lat), expand=c(0,0), name="Latitude") +
@@ -163,7 +166,7 @@ for(v in vars){
 	 	print(
 	ggplot(data=ncT.x) +
 		geom_raster(aes(x=lon, y=lat, fill=tair)) +
-		scale_fill_gradientn(colours=c("blue", "red"), limits=c(240, 330)) +
+		scale_fill_gradientn(colours=c("blue", "red"), limits=c(ranges.day[ranges.day$var==v,"Min"], ranges.day[ranges.day$var==v,"Max"])) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(ncT.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(ncT.x$lat), expand=c(0,0), name="Latitude") +
