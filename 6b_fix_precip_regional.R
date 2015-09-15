@@ -63,7 +63,7 @@ load('/projectnb/dietzelab/paleon/met_regional/fix_precip/NADP_daily.Rdata')
 
 #loop through data and correct distributions
 for(y in beg.yr:end.yr){
-  print(paste(" --- Year : "), y, sep="")
+  print(paste0(" --- Year : ", y))
   for(m in 1:12){
     
     #open down-scaled 6-hourly mean precip file for each month
