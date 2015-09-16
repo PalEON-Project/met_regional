@@ -27,7 +27,7 @@ fillv   <- 1e+30
 # Using the first precipf file as my mask
 nc.mask <- nc_open(file.path(basedir, "precipf", "precipf_0850_01.nc"))
 df.mask <- ncvar_get(nc.mask, "precipf")[,,1]
-df.mask[df.mask>0] <- 1 # Convert it to binary to mimic the way Jackie did some masking in fix_precip_regional
+df.mask[!is.na(df.mask)] <- 1 # Convert it to binary to mimic the way Jackie did some masking in fix_precip_regional
 nc_close(nc.mask)
 
 
@@ -45,8 +45,8 @@ for(v in 1:length(vars)){
     
     # Masking everything to our pre-defined, common mask
     # I couldn't find a faster way to do this outside of a loop, so a loop it is
-    for(v in 1:(length(data[1,1,]))){
-      data[,,v] <- data[,,v]*df.mask
+    for(i in 1:(length(data[1,1,]))){
+      data[,,i] <- data[,,i]*df.mask
     }
       
     #format time as days since 850-01-01 midnight
@@ -76,33 +76,27 @@ for(v in 1:length(vars)){
       nc_variable_long_name=paste('Incident (downwelling) longwave ',
                                   'radiation averaged over the time step of the forcing data', sep='')
       nc_variable_units='W m-2'
-    }
-    else if (vars[v] == 'precipf') {
+    } else if (vars[v] == 'precipf') {
       nc_variable_long_name=paste('The per unit area and time ',
                                   'precipitation representing the sum of convective rainfall, ',
                                   'stratiform rainfall, and snowfall', sep='')
       nc_variable_units='kg m-2 s-1'
-    }
-    else if (vars[v] == 'psurf') {
+    } else if (vars[v] == 'psurf') {
       nc_variable_long_name='Pressure at the surface'
       nc_variable_units='Pa'
-    }
-    else if (vars[v] == 'qair') {
+    } else if (vars[v] == 'qair') {
       nc_variable_long_name=
         'Specific humidity measured at the lowest level of the atmosphere'
       nc_variable_units='kg kg-1'
-    }
-    else if (vars[v] == 'swdown') {
+    } else if (vars[v] == 'swdown') {
       nc_variable_long_name=paste('Incident (downwelling) radiation in ',
                                   'the shortwave part of the spectrum averaged over the time ',
                                   'step of the forcing data', sep='')
       nc_variable_units='W m-2'
-    }
-    else if (vars[v] == 'tair') {
+    } else if (vars[v] == 'tair') {
       nc_variable_long_name='2 meter air temperature'
       nc_variable_units='K'
-    }
-    else if (vars[v] == 'wind') {
+    } else if (vars[v] == 'wind') {
       nc_variable_long_name='Wind speed'
       nc_variable_units='m s-1'
     }
