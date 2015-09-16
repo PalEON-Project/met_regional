@@ -31,10 +31,10 @@
 # ----------------------------------------------
 library(raster); library(animation)
 library(ncdf4); library(ggplot2); library(grid)
-# dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/"
-dir.met <- "~/Dropbox/PalEON CR/met_regional/met_examples"
-# dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/met_qaqc"
-dir.out <- "~/Dropbox/PalEON CR/met_regional/met_qaqc"
+dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
+# dir.met <- "~/Dropbox/PalEON CR/met_regional/met_examples"
+dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/met_qaqc"
+# dir.out <- "~/Dropbox/PalEON CR/met_regional/met_qaqc"
 if(!dir.exists(dir.out)) dir.create(dir.out)
 
 # Variables we're graphing
