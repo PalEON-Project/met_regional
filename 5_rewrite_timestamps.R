@@ -1,17 +1,35 @@
 #correct the PalEON met driver timestamps to a uniform format
 #Original: Jaclyn Hatala Matthes, 3/20/14, jaclyn.hatala.matthes@gmail.com
-#Edits: Christy Rollinson, January 2015, crollinson@gmail.com
+#Edits: Christy Rollinson, crollinson@gmail.com
+#       January   2015: code clean-up, annotation
+#       September 2015: add step to add mask here since CRU, CCSM4 p1000, & 
+#                       CCSM4 historical all have slightly different masks
+#
 
 library(ncdf4)
 
 basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/"
 outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
 
+if(!dir.exists(outpath)) dir.create(outpath)
+
 vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 dpm   <- c(31,28,31,30,31,30,31,31,30,31,30,31) #days per month
 dpm.l <- c(31,29,31,30,31,30,31,31,30,31,30,31) #leap year days per month
 mv    <- 1e30    # Missing value
 fillv   <- 1e+30
+
+# We're having issues with non-consistent projections among the data, 
+# so we're going to to use precipf 0850-01-01 as a mask because it has the fewest
+# cells (there's a 1-cell discrpeency with that and post-1850; CRUNCEP has a lot more
+# cells)
+
+# Using the first precipf file as my mask
+nc.mask <- nc_open(file.path(basedir, "precipf", "precipf_0850_01.nc"))
+df.mask <- ncvar_get(nc.mask, "precipf")[,,1]
+df.mask[df.mask>0] <- 1 # Convert it to binary to mimic the way Jackie did some masking in fix_precip_regional
+nc_close(nc.mask)
+
 
 for(v in 1:length(vars)){
   print(paste("--------------------", vars[v], "--------------------", sep=" "))
@@ -24,6 +42,12 @@ for(v in 1:length(vars)){
     lat <- ncvar_get(nc.file,"lat")
     lon <- ncvar_get(nc.file,"lon")
     nc_close(nc.file)
+    
+    # Masking everything to our pre-defined, common mask
+    # I couldn't find a faster way to do this outside of a loop, so a loop it is
+    for(v in 1:(length(data[1,1,]))){
+      data[,,v] <- data[,,v]*df.mask
+    }
       
     #format time as days since 850-01-01 midnight
     tmp  <- strsplit(files[f],"_")

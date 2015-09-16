@@ -36,7 +36,7 @@ pl.files <- list.files(basedir)
 beg.yr  <- 850
 # beg.yr  <- 1582
 end.yr  <- 2010
-n.samps <- 50 # original was 500 (13.5 min/yr), but reduced to 100 for speed (3 min/yr)
+n.samps <- 50 # original was 500 (13.5 min/yr), but reduced to 50 for speed (1 min/yr)
 
 #open 1 file to make PalEON mask
 nc.file <- nc_open(paste(basedir,'precipf_0850_01.nc',sep=''))
