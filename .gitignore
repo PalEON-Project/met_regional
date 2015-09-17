@@ -42,3 +42,5 @@ met_qaqc/
  Met_Check_Figures/
 *.pdf
 *.Rout
+met_bias/
+Precip_Check.R
