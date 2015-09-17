@@ -21,7 +21,7 @@ fillv   <- 1e+30
 
 # We're having issues with non-consistent projections among the data, 
 # so we're going to to use precipf 0850-01-01 as a mask because it has the fewest
-# cells (there's a 1-cell discrpeency with that and post-1850; CRUNCEP has a lot more
+# cells (there's a 1-cell discrepency with that and post-1850; CRUNCEP has a lot more
 # cells)
 
 # Using the first precipf file as my mask
@@ -39,12 +39,17 @@ for(v in 1:length(vars)){
   for(f in 1:length(files)){
     nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
     data <- ncvar_get(nc.file,vars[v])
+    
     lat <- ncvar_get(nc.file,"lat")
     lon <- ncvar_get(nc.file,"lon")
     nc_close(nc.file)
     
     # Masking everything to our pre-defined, common mask
     # I couldn't find a faster way to do this outside of a loop, so a loop it is
+    # Somewhere along the way random values went missing
+    # NOTE: In the bias-correction, several small values become 0 (esp. swdown, precipf), 
+    #       so we'll just call them 0 here
+    data[is.na(data) | data<0] <- 0 
     for(i in 1:(length(data[1,1,]))){
       data[,,i] <- data[,,i]*df.mask
     }
