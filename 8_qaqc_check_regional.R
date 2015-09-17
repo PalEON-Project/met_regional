@@ -145,6 +145,7 @@ saveGIF( {
               axis.title.y=element_blank(),
               axis.title.x=element_blank()) +
 		coord_equal(ratio=1)
+
 	plot.precipf <- ggplot(data=precipf.x) +
 		geom_raster(aes(x=lon, y=lat, fill=precipf)) +
 		scale_fill_gradientn(colours=c("gray50", "blue3"), limits=c(0,1e-4)) +
@@ -156,6 +157,7 @@ saveGIF( {
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
         theme(panel.background=element_blank()) +
 		coord_equal(ratio=1)
+
 	plot.swdown <- ggplot(data=swdown.x) +
 		geom_raster(aes(x=lon, y=lat, fill=swdown)) +
 		scale_fill_gradientn(colours=c("gray50", "goldenrod2"), limits=c(0,600)) +
@@ -167,6 +169,7 @@ saveGIF( {
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
         theme(panel.background=element_blank()) +
 		coord_equal(ratio=1)
+
 	plot.lwdown <- ggplot(data=lwdown.x) +
 		geom_raster(aes(x=lon, y=lat, fill=lwdown)) +
 		# scale_fill_gradientn(colours=c("gray50", "darkorange1"), limits=c(0,330)) +
@@ -179,6 +182,7 @@ saveGIF( {
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
         theme(panel.background=element_blank()) +
 		coord_equal(ratio=1)
+
 	plot.qair <- ggplot(data=qair.x) +
 		geom_raster(aes(x=lon, y=lat, fill=qair)) +
 		scale_fill_gradientn(colours=c("gray50", "aquamarine3"), limits=c(0, 0.025)) +
@@ -190,9 +194,10 @@ saveGIF( {
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
         theme(panel.background=element_blank()) +
 		coord_equal(ratio=1)
+
 	plot.psurf <- ggplot(data=psurf.x) +
 		geom_raster(aes(x=lon, y=lat, fill=psurf)) +
-		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000) +
+		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(psurf.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(psurf.x$lat), expand=c(0,0), name="Latitude") +
@@ -201,6 +206,7 @@ saveGIF( {
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
         theme(panel.background=element_blank()) +
 		coord_equal(ratio=1)
+		
 	plot.wind <- ggplot(data=wind.x) +
 		geom_raster(aes(x=lon, y=lat, fill=wind)) +
 		scale_fill_gradientn(colours=c("gray80", "gray30"), limits=c(0,35)) +
@@ -212,6 +218,7 @@ saveGIF( {
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
         theme(panel.background=element_blank()) +
 		coord_equal(ratio=1)
+		
 	plot.time <- ggplot(data=tair.x) +
 		geom_text(aes(x=1, y=1, label=paste(year, mon, sep=" - ")), size=24) +
         theme(panel.background=element_blank()) 
@@ -341,7 +348,7 @@ saveGIF( {
 		coord_equal(ratio=1)
 	plot.psurf <- ggplot(data=psurf.x) +
 		geom_raster(aes(x=lon, y=lat, fill=psurf)) +
-		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000) +
+		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(psurf.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(psurf.x$lat), expand=c(0,0), name="Latitude") +
@@ -482,7 +489,7 @@ saveGIF( {
 		coord_equal(ratio=1)
 	plot.psurf <- ggplot(data=psurf.x) +
 		geom_raster(aes(x=lon, y=lat, fill=psurf)) +
-		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000) +
+		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(psurf.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(psurf.x$lat), expand=c(0,0), name="Latitude") +
@@ -624,7 +631,7 @@ saveGIF( {
 		coord_equal(ratio=1)
 	plot.psurf <- ggplot(data=psurf.x) +
 		geom_raster(aes(x=lon, y=lat, fill=psurf)) +
-		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000) +
+		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(psurf.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(psurf.x$lat), expand=c(0,0), name="Latitude") +
@@ -765,7 +772,7 @@ saveGIF( {
 		coord_equal(ratio=1)
 	plot.psurf <- ggplot(data=psurf.x) +
 		geom_raster(aes(x=lon, y=lat, fill=psurf)) +
-		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000) +
+		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(90000,110000)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(psurf.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(psurf.x$lat), expand=c(0,0), name="Latitude") +
