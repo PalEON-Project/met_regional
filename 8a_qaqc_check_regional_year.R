@@ -98,7 +98,7 @@ files.wind     <- dir(file.path(dir.met, "wind"))
 
 saveGIF( {  
   # Looping through each file to generate the image for each step of the animation
-  for(y in yr.start1:yr.end1)
+  for(y in yr.start1:yr.end1){
   tair.graph    <-	files.tair   [which(as.numeric(substr(files.tair,    6,9))==y)]
   precipf.graph <-	files.precipf[which(as.numeric(substr(files.precipf, 9,12))==y)]
   swdown.graph  <-	files.swdown [which(as.numeric(substr(files.swdown,  8,11))==y)]
@@ -271,5 +271,6 @@ saveGIF( {
 	print(plot.psurf,   vp = viewport(layout.pos.row = 3, layout.pos.col = 2))
 	print(plot.wind,    vp = viewport(layout.pos.row = 4, layout.pos.col = 1))
 	print(plot.time,    vp = viewport(layout.pos.row = 4, layout.pos.col = 2))
-	}}, movie.name=file.path(dir.out, paste0("MetDrivers_YearMeans", "_", yr.start1, "-", yr.end1, ".gif")), interval=0.3, nmax=10000, autobrowse=F, autoplay=F, ani.height=800, ani.width=800)
+	}
+	},	movie.name=file.path(dir.out, paste0("MetDrivers_YearMeans", "_", yr.start1, "-", yr.end1, ".gif")), interval=0.3, nmax=10000, autobrowse=F, autoplay=F, ani.height=800, ani.width=800)
 # ---------------------
