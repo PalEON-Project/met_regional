@@ -14,6 +14,23 @@ out_dir=/projectnb/dietzelab/paleon/met_regional/bias_corr/regional_monthly_v2/
 
 vars=(lwdown precipf psurf qair swdown tair wind)                                                      
 
+#Make directories for organization
+if [ ! -d ${out_dir} ]
+then
+    mkdir ${out_dir}
+fi
+pushd ${out_dir}
+
+for var in ${vars[@]}
+do
+if [ ! -d ${out_dir}${var}/ ]
+then 
+    mkdir ${out_dir}${var}/
+fi
+done
+popd
+
+
 #loop over vars and calculate the mean monthly bias b/w CRUNCEP & down-scaled GCM
 echo "---------- Loop 1: Mean Bias ----------"
 
