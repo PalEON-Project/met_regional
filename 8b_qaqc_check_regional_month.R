@@ -46,8 +46,8 @@ vars         <- c("tair", "precipf", "swdown", "lwdown", "qair", "psurf", "wind"
 # window for graphing monthly means
 # Note: 2 windows to get each of the splice points
 # yr.start.mo1  <- 1849
-yr.start.mo1  <- 1900
-yr.end.mo1    <- 1901
+yr.start.mo1  <- 1895
+yr.end.mo1    <- 1902
 
 paleon.states <- map_data("state")
 
@@ -141,8 +141,8 @@ saveGIF( {
 		geom_raster(aes(x=lon, y=lat, fill=precipf)) +
 		scale_fill_gradientn(colours=c("gray50", "blue3"), limits=c(0,2.5e-4)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
-		scale_x_continuous(limits=range(precipf.x$lon), expand=c(0,0), name="Longitude") +
-		scale_y_continuous(limits=range(precipf.x$lat), expand=c(0,0), name="Latitude") +
+		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
+		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +
 		# ggtitle(paste("Precipf", year, mon, sep=" - ")) +
         theme(plot.margin=unit(c(0,0,0,0), "lines")) +
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
@@ -153,8 +153,8 @@ saveGIF( {
 		geom_raster(aes(x=lon, y=lat, fill=swdown)) +
 		scale_fill_gradientn(colours=c("gray50", "goldenrod2"), limits=c(0,600)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
-		scale_x_continuous(limits=range(swdown.x$lon), expand=c(0,0), name="Longitude") +
-		scale_y_continuous(limits=range(swdown.x$lat), expand=c(0,0), name="Latitude") +
+		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
+		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +
 		# ggtitle(paste("Tair", year, mon, sep=" - ")) +
         theme(plot.margin=unit(c(0,0,0,0), "lines")) +
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
@@ -166,8 +166,8 @@ saveGIF( {
 		# scale_fill_gradientn(colours=c("gray50", "darkorange1"), limits=c(0,330)) +
 		scale_fill_gradientn(colours=c("gray50", "darkorange1"), limits=c(100,800)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
-		scale_x_continuous(limits=range(lwdown.x$lon), expand=c(0,0), name="Longitude") +
-		scale_y_continuous(limits=range(lwdown.x$lat), expand=c(0,0), name="Latitude") +
+		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
+		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +
 		# ggtitle(paste("Tair", year, mon, sep=" - ")) +
         theme(plot.margin=unit(c(0,0,0,0), "lines")) +
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
@@ -178,8 +178,8 @@ saveGIF( {
 		geom_raster(aes(x=lon, y=lat, fill=qair)) +
 		scale_fill_gradientn(colours=c("gray50", "aquamarine3"), limits=c(0, 0.025)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
-		scale_x_continuous(limits=range(qair.x$lon), expand=c(0,0), name="Longitude") +
-		scale_y_continuous(limits=range(qair.x$lat), expand=c(0,0), name="Latitude") +
+		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
+		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +
 		# ggtitle(paste("Tair", year, mon, sep=" - ")) +
         theme(plot.margin=unit(c(0,0,0,0), "lines")) +
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
@@ -190,8 +190,8 @@ saveGIF( {
 		geom_raster(aes(x=lon, y=lat, fill=psurf)) +
 		scale_fill_gradientn(colours=c("gray50", "mediumpurple2"), limits=c(91000,110000)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
-		scale_x_continuous(limits=range(psurf.x$lon), expand=c(0,0), name="Longitude") +
-		scale_y_continuous(limits=range(psurf.x$lat), expand=c(0,0), name="Latitude") +
+		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
+		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +
 		# ggtitle(paste("Tair", year, mon, sep=" - ")) +
         theme(plot.margin=unit(c(0,0,0,0), "lines")) +
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +
@@ -202,8 +202,8 @@ saveGIF( {
 		geom_raster(aes(x=lon, y=lat, fill=wind)) +
 		scale_fill_gradientn(colours=c("gray80", "gray30"), limits=c(0,15)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
-		scale_x_continuous(limits=range(wind.x$lon), expand=c(0,0), name="Longitude") +
-		scale_y_continuous(limits=range(wind.x$lat), expand=c(0,0), name="Latitude") +
+		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
+		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +
 		# ggtitle(paste("Tair", year, mon, sep=" - ")) +
         theme(plot.margin=unit(c(0,0,0,0), "lines")) +
         # theme(legend.position=c(0.75, 0.1), legend.direction="horizontal") +

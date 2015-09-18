@@ -141,7 +141,7 @@ saveGIF( {
 		coord_equal(ratio=1)
 	plot.swdown <- ggplot(data=swdown.x) +
 		geom_raster(aes(x=lon, y=lat, fill=swdown)) +
-		scale_fill_gradientn(colours=c("gray50", "goldenrod2"), limits=c(0,600)) +
+		scale_fill_gradientn(colours=c("gray50", "goldenrod2"), limits=c(0,750)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +
@@ -211,7 +211,9 @@ saveGIF( {
 	print(plot.psurf,   vp = viewport(layout.pos.row = 3, layout.pos.col = 2))
 	print(plot.wind,    vp = viewport(layout.pos.row = 4, layout.pos.col = 1))
 	print(plot.time,    vp = viewport(layout.pos.row = 4, layout.pos.col = 2))
-	}}}, movie.name=file.path(dir.out, paste0("MetDrivers_6hrlyData", "_", yr.start.day1, "-04.gif")), interval=0.3, nmax=10000, autobrowse=F, autoplay=F, ani.height=800, ani.width=800)
+	}
+	}
+	}, movie.name=file.path(dir.out, paste0("MetDrivers_6hrlyData", "_", yr.start.day1, "-04.gif")), interval=0.3, nmax=10000, autobrowse=F, autoplay=F, ani.height=800, ani.width=800)
 # ---------------------
 
 

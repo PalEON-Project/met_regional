@@ -33,8 +33,8 @@ nc_close(nc.mask)
 
 for(v in 1:length(vars)){
   print(paste("--------------------", vars[v], "--------------------", sep=" "))
-  files <- list.files(paste(basedir,vars[v],"/",sep=""))
-  
+  files <- dir(file.path(basedir,vars[v]), ".nc")
+    
   d <- -1
   for(f in 1:length(files)){
     nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
