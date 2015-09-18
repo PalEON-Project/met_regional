@@ -37,7 +37,17 @@ for(v in 1:length(vars)){
     
   d <- -1
   for(f in 1:length(files)){
-    nc.file <- nc_open(paste(basedir,vars[v],"/",files[f],sep=""))
+    #format time as days since 850-01-01 midnight
+    tmp  <- strsplit(files[f],"_")
+    year <- as.numeric(tmp[[1]][2])
+    mon  <- as.numeric(substring(tmp[[1]][3],1,2))
+    print(year)
+
+	# Something is being super weird with precip in 1900, so we're going to replace it with 1901
+	# NOTE: Because only centuries divisible by 400 are leap years, this is okay (1900 is not a leap year)
+	if(year == 1900) { f2 <- f+12 } else { f2 <- f }
+
+    nc.file <- nc_open(paste(basedir,vars[v],"/",files[f2],sep=""))
     data <- ncvar_get(nc.file,vars[v])
     
     lat <- ncvar_get(nc.file,"lat")
@@ -54,11 +64,6 @@ for(v in 1:length(vars)){
       data[,,i] <- data[,,i]*df.mask
     }
       
-    #format time as days since 850-01-01 midnight
-    tmp  <- strsplit(files[f],"_")
-    year <- as.numeric(tmp[[1]][2])
-    mon  <- as.numeric(substring(tmp[[1]][3],1,2))
-    print(year)
     if((year%%4==0 & year%%100!=0) | year%%400==0){ # Leap Year
 	  print(paste("-- Leap Year! --", sep=""))
       nc_time_units <- paste('days since 0850-01-01 00:00:00', sep='')
