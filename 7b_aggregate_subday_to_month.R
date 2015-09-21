@@ -11,6 +11,7 @@
 # Set up libraries, file paths, useful variables, etc
 # -------------------------------------------------------------------------
 library(ncdf4)
+library(abind)
 
 basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
 outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/monthly"
