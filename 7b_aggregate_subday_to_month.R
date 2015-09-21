@@ -108,7 +108,7 @@ for(v in 1:length(vars)){
     nc_var  <- ncvar_def(vars[v],nc_variable_units,
                             list(dimX,dimY,dim.time), fillv, longname=nc_variable_long_name,prec="double")
     
-    ofname  <- paste(outpath,vars[v],"/",vars[v],'.nc',sep="")
+    ofname  <- paste(file.path(outpath,vars[v],paste0(vars[v],'.nc')))
     newfile <- nc_create( ofname, nc_var ) # Initialize file 
     
     ncatt_put( newfile, nc_var, 'days since 850', nc.time)
