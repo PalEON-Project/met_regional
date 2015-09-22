@@ -18,6 +18,7 @@ vars_in=(tair swdown lwdown qair psurf wind)
 # Copy everything over to the new directory
 # -----------------------
 # Do precip on its own because it needs ot be renames
+mkdir -p ${dir_out}precipf/
 cp ${dir_in}precipf_corr/* ${dir_out}precipf/
 
 # Now just copy all the remaining variables
