@@ -8,4 +8,4 @@
 #$ -l h_rt=48:00:00
 #$ -N MonthQAQC
 #cd /projectnb/dietzelab/paleon/met_regional/
-R CMD BATCH 8b_qaqc_check_regional_month.R
+R CMD BATCH 7b_qaqc_check_regional_month.R

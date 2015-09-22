@@ -8,4 +8,4 @@
 #$ -l h_rt=48:00:00
 #$ -N MetQAQC
 #cd /projectnb/dietzelab/paleon/met_regional/
-R CMD BATCH 8_qaqc_check_regional.R
+R CMD BATCH 7_qaqc_check_regional.R
