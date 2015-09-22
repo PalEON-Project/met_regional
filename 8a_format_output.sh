@@ -1,3 +1,4 @@
+#!bin/bash
 # Script transfers & packages final bias-corrected output to folder for distribution
 # Specifying in & out directories
 dir_in=/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/ 

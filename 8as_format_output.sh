@@ -10,4 +10,4 @@
 #$ -N Pack_Subday
 #cd /projectnb/dietzelab/paleon/met_regional/
 
-qsub 8a_format_output.sh
+sh 8a_format_output.sh
