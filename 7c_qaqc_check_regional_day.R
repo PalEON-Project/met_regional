@@ -130,7 +130,7 @@ saveGIF( {
 		coord_equal(ratio=1)
 	plot.precipf <- ggplot(data=precipf.x) +
 		geom_raster(aes(x=lon, y=lat, fill=precipf)) +
-		scale_fill_gradientn(colours=c("gray50", "blue3"), limits=c(0,1e-3)) +
+		scale_fill_gradientn(colours=c("gray50", "blue3"), limits=c(0,2.25e-3)) +
 		geom_path(data=paleon.states, aes(x=long, y=lat, group=group)) +
 		scale_x_continuous(limits=range(tair.x$lon), expand=c(0,0), name="Longitude") +
 		scale_y_continuous(limits=range(tair.x$lat), expand=c(0,0), name="Latitude") +

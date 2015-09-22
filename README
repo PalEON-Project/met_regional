@@ -14,12 +14,12 @@ Directories in /projectnb/dietzelab/paleon/met_regional/ are as follows:
 It is simply copied over from /projectnb/dietzelab/paleon/create_met/R1i1P1/Scripts/output/ann_all/$VAR/netcdf 
 (Bjorn's file processing set-up).
 2. cruncep/ contains the original CRUNCEP driver data downloaded by Bjorn and used to run the ANN procedure.
-3. bias_corr/ contains the bias-corrected down-scaled CCSM4 output 
+3. bias_corr/ contains the bias-corrected down-scaled CCSM4 output  as well as post-bias correction files
 4. fix_precip/ contains scripts and NADP precip data used to correct the precipitation frequency distribution 
 for Phase 1a and 1b bias-corrected output
 5. phase1a_met_drivers_v#/ are the various versions of met drivers produced throughout the past year - only 
 the most recent version should be used, as this applies all of the relevant corrections.
-6. phase1b_met_regional/ contains the final version of the regional met drivers with all corrections from 
+6. phase2_met_regional/ contains the final version of the regional met drivers with all corrections from 
 Phase 1a applied.
 
 The processing code steps occurred in the following order:
