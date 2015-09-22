@@ -22,7 +22,7 @@ cp -r ${dir_in}$precipf_corr/ ${dir_out}$precipf/
 # Now just copy all the remaining variables
 for VAR in ${vars_in[@]}
 do
-	cp -r ${dir_in}${VAR}/ ${dir_out}${VAR}/
+	cp -r ${dir_in}$VAR/ ${dir_out}$VAR/
 done
 # -----------------------
 
@@ -38,6 +38,6 @@ tar -jcvf ${dir_out}$met_zip/precipf.tar.bz2 ${dir_out}$precipf
 
 for VAR in ${vars_in[@]}
 do
-	tar -jcvf ${dir_out}$met_zip/${VAR}.tar.bz2 ${dir_out}${VAR}
+	tar -jcvf ${dir_out}$met_zip/${VAR}.tar.bz2 ${dir_out}$VAR
 done
 # -----------------------
