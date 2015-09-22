@@ -8,36 +8,38 @@ dir_out=/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2/
 vars_in=(tair swdown lwdown qair psurf wind) 
 
 # Make the out directory 
-if[ ! -d ${dir_out} ]
-then
-	mkdir ${dir_out}
-fi
+#if[ ! -d ${dirout} ]
+#then
+	mkdir -p ${dirout}
+#fi
 
 # -----------------------
 # Copy everything over to the new directory
 # -----------------------
 # Do precip on its own because it needs ot be renames
-cp -r ${dir_in}$precipf_corr/ ${dir_out}$precipf/
+cp -r ${dir_in}precipf_corr/ ${dir_out}precipf/
 
 # Now just copy all the remaining variables
 for VAR in ${vars_in[@]}
 do
-	cp -r ${dir_in}$VAR/ ${dir_out}$VAR/
+	echo ${VAR}
+	cp -r ${dir_in}${VAR}/ ${dir_out}${VAR}/
 done
 # -----------------------
 
 # -----------------------
 # Compress the files for transfer to iPlant
 # -----------------------
-if[ ! -d ${dir_out}$met_zip/ ]
-then
-	mkdir ${dir_out}$met_zip/
-fi
+#if[ ! -d ${dir_out}met_zip/ ]
+#then
+	mkdir -p ${dir_out}met_zip/
+#fi
 
-tar -jcvf ${dir_out}$met_zip/precipf.tar.bz2 ${dir_out}$precipf
+tar -jcvf ${dir_out}met_zip/precipf.tar.bz2 ${dir_out}$precipf
 
 for VAR in ${vars_in[@]}
 do
-	tar -jcvf ${dir_out}$met_zip/${VAR}.tar.bz2 ${dir_out}$VAR
+	echo ${VAR}
+	tar -jcvf ${dir_out}met_zip/${VAR}.tar.bz2 ${dir_out}${VAR}
 done
 # -----------------------
