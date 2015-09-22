@@ -1,4 +1,5 @@
-#!bin/bash
+#!bin/sh
+#$ -wd /projectnb/dietzelab/paleon/met_regional/
 # Script transfers & packages final bias-corrected output to folder for distribution
 # Specifying in & out directories
 dir_in=/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/ 
@@ -10,20 +11,21 @@ vars_in=(tair swdown lwdown qair psurf wind)
 # Make the out directory 
 #if[ ! -d ${dirout} ]
 #then
-	mkdir -p ${dirout}
+	mkdir -p ${dir_out}
 #fi
 
 # -----------------------
 # Copy everything over to the new directory
 # -----------------------
 # Do precip on its own because it needs ot be renames
-cp -r ${dir_in}precipf_corr/ ${dir_out}precipf/
+cp ${dir_in}precipf_corr/* ${dir_out}precipf/
 
 # Now just copy all the remaining variables
 for VAR in ${vars_in[@]}
 do
 	echo ${VAR}
-	cp -r ${dir_in}${VAR}/ ${dir_out}${VAR}/
+	mkdir -p ${dir_out}${VAR}/
+	cp ${dir_in}${VAR}/* ${dir_out}${VAR}/
 done
 # -----------------------
 

@@ -8,6 +8,4 @@
 #$ -l h_rt=60:00:00
 #$ -N Pack_Subday
 #cd /projectnb/dietzelab/paleon/met_regional/
-# Script transfers & packages final bias-corrected output to folder for distribution
-
 sh 8a_format_output.sh
