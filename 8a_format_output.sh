@@ -7,10 +7,10 @@ dir_out=/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2/
 # Note: leave precipf_corr out because it needs to be renames
 vars_in=(tair swdown lwdown qair psurf wind) 
 
-# Make the out directory & a subfolder for zipped met
-if[! -d ${dir_out}]
-	then
-	mkdir ${dir_out} ${dir_out}$met_zip/
+# Make the out directory 
+if[ ! -d ${dir_out} ]
+then
+	mkdir ${dir_out}
 fi
 
 # -----------------------
@@ -29,6 +29,11 @@ done
 # -----------------------
 # Compress the files for transfer to iPlant
 # -----------------------
+if[ ! -d ${dir_out}$met_zip/ ]
+then
+	mkdir ${dir_out}$met_zip/
+fi
+
 tar -jcvf ${dir_out}$met_zip/precipf.tar.bz2 ${dir_out}$precipf
 
 for VAR in ${vars_in[@]}
