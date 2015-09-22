@@ -31,20 +31,20 @@
 # ----------------------------------------------
 library(raster); library(animation)
 library(ncdf4); library(ggplot2); library(grid)
-# dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
-dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/"
+dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
+# dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/"
 # dir.met <- "~/Dropbox/PalEON CR/met_regional/met_examples"
-dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/met_qaqc"
-# dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/met_qaqc"
+dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/met_qaqc"
+# dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/met_qaqc"
 # dir.out <- "~/Dropbox/PalEON CR/met_regional/met_qaqc"
 if(!dir.exists(dir.out)) dir.create(dir.out)
 
 # Variables we're graphing
 # vars         <- c("tair", "precipf_corr", "swdown", "lwdown", "qair", "psurf", "wind") 
-vars         <- c("tair", "precipf", "swdown", "lwdown", "qair", "psurf", "wind") 
+vars         <- c("tair", "precipf_corr", "swdown", "lwdown", "qair", "psurf", "wind") 
 
 # Window for full annual means
-yr.start1  <- 0850
+yr.start1  <- 1850
 yr.end1    <- 2010
 
 
@@ -78,7 +78,7 @@ paleon.states <- map_data("state")
 # v="tair"
 
 files.tair     <- dir(file.path(dir.met, "tair"))
-files.precipf  <- dir(file.path(dir.met, "precipf"))
+files.precipf  <- dir(file.path(dir.met, "precipf_corr"))
 files.swdown   <- dir(file.path(dir.met, "swdown"))
 files.lwdown   <- dir(file.path(dir.met, "lwdown"))
 files.qair     <- dir(file.path(dir.met, "qair"))
@@ -111,7 +111,7 @@ saveGIF( {
 	print(paste0("---- ", tair.graph[i], " ----"))
 	# Doing all the variables here because we're going to plot them all together on the giff
 	tair.full    <- stack(file.path(dir.met, "tair",    tair.graph[i]))
-	precipf.full <- stack(file.path(dir.met, "precipf", precipf.graph[i]))
+	precipf.full <- stack(file.path(dir.met, "precipf_corr", precipf.graph[i]))
 	swdown.full  <- stack(file.path(dir.met, "swdown",  swdown.graph[i]))
 	lwdown.full  <- stack(file.path(dir.met, "lwdown",  lwdown.graph[i]))
 	qair.full    <- stack(file.path(dir.met, "qair",    qair.graph[i]))
@@ -156,7 +156,8 @@ saveGIF( {
 	psurf.x2  [,i+2] <- rasterToPoints(psurf.x1  )[,3]
 	wind.x2   [,i+2] <- rasterToPoints(wind.x1   )[,3]
 	}
-	}
+	} # end file loop
+	
 	# finding the annual means
 	tair.x    <- data.frame(tair.x2   [,1:2], tair   =rowMeans(tair.x2   [,3:ncol(tair.x2   )]))
 	precipf.x <- data.frame(precipf.x2[,1:2], precipf=rowMeans(precipf.x2[,3:ncol(precipf.x2)]))
@@ -271,6 +272,8 @@ saveGIF( {
 	print(plot.psurf,   vp = viewport(layout.pos.row = 3, layout.pos.col = 2))
 	print(plot.wind,    vp = viewport(layout.pos.row = 4, layout.pos.col = 1))
 	print(plot.time,    vp = viewport(layout.pos.row = 4, layout.pos.col = 2))
+
+	rm(tair.x, tair.x2, precipf.x, precipf.x2, swdown.x, swdown.x2, lwdown, lwdown.x2, qair.x, qair.x2, psurf.x, psurf.x2, wind.x, wind.x2)
 	}
 	},	movie.name=file.path(dir.out, paste0("MetDrivers_YearMeans", "_", yr.start1, "-", yr.end1, ".gif")), interval=0.3, nmax=10000, autobrowse=F, autoplay=F, ani.height=800, ani.width=800)
 # ---------------------
