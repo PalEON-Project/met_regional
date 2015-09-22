@@ -31,17 +31,17 @@
 # ----------------------------------------------
 library(raster); library(animation)
 library(ncdf4); library(ggplot2); library(grid)
-# dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
 dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/"
+# dir.met  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
 # dir.met <- "~/Dropbox/PalEON CR/met_regional/met_examples"
-dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/met_qaqc"
-# dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/met_qaqc"
+dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/met_qaqc"
+# dir.out  <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/final_output_v2/met_qaqc"
 # dir.out <- "~/Dropbox/PalEON CR/met_regional/met_qaqc"
 if(!dir.exists(dir.out)) dir.create(dir.out)
 
 # Variables we're graphing
-# vars         <- c("tair", "precipf_corr", "swdown", "lwdown", "qair", "psurf", "wind") 
-vars         <- c("tair", "precipf", "swdown", "lwdown", "qair", "psurf", "wind") 
+vars         <- c("tair", "precipf_corr", "swdown", "lwdown", "qair", "psurf", "wind") 
+# vars         <- c("tair", "precipf", "swdown", "lwdown", "qair", "psurf", "wind") 
 
 # window for graphing monthly means
 # Note: 2 windows to get each of the splice points
@@ -61,7 +61,7 @@ paleon.states <- map_data("state")
 # v="tair"
 
 files.tair     <- dir(file.path(dir.met, "tair"))
-files.precipf  <- dir(file.path(dir.met, "precipf"))
+files.precipf  <- dir(file.path(dir.met, "precipf_corr"))
 files.swdown   <- dir(file.path(dir.met, "swdown"))
 files.lwdown   <- dir(file.path(dir.met, "lwdown"))
 files.qair     <- dir(file.path(dir.met, "qair"))
@@ -86,7 +86,7 @@ saveGIF( {
 	print(paste0("---- ", files.tair[i], " ----"))
 	# Doing all the variables here because we're going to plot them all together on the giff
 	tair.full    <- stack(file.path(dir.met, "tair",    files.tair[i]))
-	precipf.full <- stack(file.path(dir.met, "precipf", files.precipf[i]))
+	precipf.full <- stack(file.path(dir.met, "precipf_corr", files.precipf[i]))
 	swdown.full  <- stack(file.path(dir.met, "swdown",  files.swdown[i]))
 	lwdown.full  <- stack(file.path(dir.met, "lwdown",  files.lwdown[i]))
 	qair.full    <- stack(file.path(dir.met, "qair",    files.qair[i]))
