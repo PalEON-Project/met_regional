@@ -44,18 +44,18 @@ for VAR in ${vars_in[@]}
 do
 	echo ${VAR}
 	mkdir -p ${dir_out}met_zip/${VAR}
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0850.tar.bz2 ${dir_out}$${VAR}/${VAR}_08*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0900.tar.bz2 ${dir_out}$${VAR}/${VAR}_09*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1000.tar.bz2 ${dir_out}$${VAR}/${VAR}_10*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1100.tar.bz2 ${dir_out}$${VAR}/${VAR}_11*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1200.tar.bz2 ${dir_out}$${VAR}/${VAR}_12*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1300.tar.bz2 ${dir_out}$${VAR}/${VAR}_13*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1400.tar.bz2 ${dir_out}$${VAR}/${VAR}_14*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1500.tar.bz2 ${dir_out}$${VAR}/${VAR}_15*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1600.tar.bz2 ${dir_out}$${VAR}/${VAR}_16*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1700.tar.bz2 ${dir_out}$${VAR}/${VAR}_17*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1800.tar.bz2 ${dir_out}$${VAR}/${VAR}_18*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1900.tar.bz2 ${dir_out}$${VAR}/${VAR}_19*
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_2000.tar.bz2 ${dir_out}$${VAR}/${VAR}_20*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0850.tar.bz2 ${dir_out}${VAR}/${VAR}_08*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0900.tar.bz2 ${dir_out}${VAR}/${VAR}_09*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1000.tar.bz2 ${dir_out}${VAR}/${VAR}_10*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1100.tar.bz2 ${dir_out}${VAR}/${VAR}_11*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1200.tar.bz2 ${dir_out}${VAR}/${VAR}_12*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1300.tar.bz2 ${dir_out}${VAR}/${VAR}_13*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1400.tar.bz2 ${dir_out}${VAR}/${VAR}_14*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1500.tar.bz2 ${dir_out}${VAR}/${VAR}_15*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1600.tar.bz2 ${dir_out}${VAR}/${VAR}_16*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1700.tar.bz2 ${dir_out}${VAR}/${VAR}_17*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1800.tar.bz2 ${dir_out}${VAR}/${VAR}_18*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1900.tar.bz2 ${dir_out}${VAR}/${VAR}_19*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_2000.tar.bz2 ${dir_out}${VAR}/${VAR}_20*
 done
 # -----------------------
