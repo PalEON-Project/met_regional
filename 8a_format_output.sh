@@ -13,22 +13,22 @@ vars_in=(tair swdown lwdown qair psurf wind)
 #then
 	mkdir -p ${dir_out}
 #fi
-
-# -----------------------
-# Copy everything over to the new directory
-# -----------------------
-# Do precip on its own because it needs ot be renames
-mkdir -p ${dir_out}precipf/
-cp ${dir_in}precipf_corr/* ${dir_out}precipf/
-
-# Now just copy all the remaining variables
-for VAR in ${vars_in[@]}
-do
-	echo ${VAR}
-	mkdir -p ${dir_out}${VAR}/
-	cp ${dir_in}${VAR}/* ${dir_out}${VAR}/
-done
-# -----------------------
+# 
+# # -----------------------
+# # Copy everything over to the new directory
+# # -----------------------
+# # Do precip on its own because it needs ot be renames
+# #mkdir -p ${dir_out}precipf/
+# #cp ${dir_in}precipf_corr/* ${dir_out}precipf/
+# 
+# # Now just copy all the remaining variables
+# for VAR in ${vars_in[@]}
+# do
+# 	echo ${VAR}
+# 	mkdir -p ${dir_out}${VAR}/
+# 	cp ${dir_in}${VAR}/* ${dir_out}${VAR}/
+# done
+# # -----------------------
 
 # -----------------------
 # Compress the files for transfer to iPlant
@@ -38,11 +38,25 @@ done
 	mkdir -p ${dir_out}met_zip/
 #fi
 
-tar -jcvf ${dir_out}met_zip/precipf.tar.bz2 ${dir_out}$precipf
+vars_in=(tair precipf swdown lwdown qair psurf wind) 
 
 for VAR in ${vars_in[@]}
 do
 	echo ${VAR}
-	tar -jcvf ${dir_out}met_zip/${VAR}.tar.bz2 ${dir_out}${VAR}
+	mkdir -p ${dir_out}met_zip/${VAR}
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}.tar.bz2 ${dir_out}${VAR}
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0850.tar.bz2 ${dir_out}$${VAR}/${VAR}_08*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0900.tar.bz2 ${dir_out}$${VAR}/${VAR}_09*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1000.tar.bz2 ${dir_out}$${VAR}/${VAR}_10*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1100.tar.bz2 ${dir_out}$${VAR}/${VAR}_11*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1200.tar.bz2 ${dir_out}$${VAR}/${VAR}_12*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1300.tar.bz2 ${dir_out}$${VAR}/${VAR}_13*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1400.tar.bz2 ${dir_out}$${VAR}/${VAR}_14*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1500.tar.bz2 ${dir_out}$${VAR}/${VAR}_15*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1600.tar.bz2 ${dir_out}$${VAR}/${VAR}_16*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1700.tar.bz2 ${dir_out}$${VAR}/${VAR}_17*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1800.tar.bz2 ${dir_out}$${VAR}/${VAR}_18*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1900.tar.bz2 ${dir_out}$${VAR}/${VAR}_19*
+	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_2000.tar.bz2 ${dir_out}$${VAR}/${VAR}_20*
 done
 # -----------------------
