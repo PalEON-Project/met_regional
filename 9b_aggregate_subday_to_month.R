@@ -34,7 +34,7 @@ for(v in 1:length(vars)){
   # Get a list of files (should be 1 file per month)
   files <- dir(file.path(basedir,vars[v]), ".nc")
 
-  if(!dir.exists(file.path(outpath, vars[v]))) dir.create(file.path(outpath, vars[v]))
+  # if(!dir.exists(file.path(outpath, vars[v]))) dir.create(file.path(outpath, vars[v]))
     
   for(f in 1:length(files)){
     #format time as days since 850-01-01 midnight
