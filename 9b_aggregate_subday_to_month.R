@@ -118,7 +118,7 @@ for(v in 1:length(vars)){
     ncvar_put(newfile, nc_var, dat.new) # Write netCDF file
     
     nc_close(newfile)  
-
+	rm(dat.new, nc.time, nc_var, newfile)
 } # Close variable loop
 # -------------------------------------------------------------------------
 
