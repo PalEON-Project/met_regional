@@ -110,7 +110,7 @@ saveGIF( {
 
     tmp  <- strsplit(names(tair.full)[y],"[.]")
     year <- tmp[[1]][1]
-    mon  <- substring(tmp[[1]][2])
+    mon  <- tmp[[1]][2]
 	day  <- tmp[[1]][3]
 	hr   <- (as.numeric(tmp[[1]][4])-1)*6
 		
