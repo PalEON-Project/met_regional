@@ -14,7 +14,7 @@ library(ncdf4)
 library(abind)
 
 basedir <- "/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2/"
-outpath <- "/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2_daily/"
+outpath <- "/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2_monthly/"
 
 if(!dir.exists(outpath)) dir.create(outpath)
 
