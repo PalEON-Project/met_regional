@@ -13,12 +13,12 @@
 # -------------------------------------------------------------------------
 library(ncdf4)
 
-basedir <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/"
-outpath <- "/projectnb/dietzelab/paleon/met_regional/bias_corr/corr_timestamp_v2/daily"
+basedir <- "/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2/"
+outpath <- "/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2_daily/"
 
 if(!dir.exists(outpath)) dir.create(outpath)
 
-vars  <- c("lwdown","precipf_corr","psurf","qair","swdown","tair","wind")
+vars  <- c("lwdown","precipf","psurf","qair","swdown","tair","wind")
 dpm   <- c(31,28,31,30,31,30,31,31,30,31,30,31) #days per month
 dpm.l <- c(31,29,31,30,31,30,31,31,30,31,30,31) #leap year days per month
 mv    <- 1e30    # Missing value
