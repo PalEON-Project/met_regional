@@ -44,7 +44,6 @@ for VAR in ${vars_in[@]}
 do
 	echo ${VAR}
 	mkdir -p ${dir_out}met_zip/${VAR}
-	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}.tar.bz2 ${dir_out}${VAR}
 	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0850.tar.bz2 ${dir_out}$${VAR}/${VAR}_08*
 	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_0900.tar.bz2 ${dir_out}$${VAR}/${VAR}_09*
 	tar -jcvf ${dir_out}met_zip/${VAR}/${VAR}_1000.tar.bz2 ${dir_out}$${VAR}/${VAR}_10*
