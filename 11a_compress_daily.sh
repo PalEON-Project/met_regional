@@ -2,7 +2,7 @@
 #$ -wd /projectnb/dietzelab/paleon/met_regional/
 # Script transfers & packages final bias-corrected output to folder for distribution
 # Specifying in & out directories
-dir_in=/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_daily/ 
+dir_in=/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2_daily/ 
 dir_out=/projectnb/dietzelab/paleon/met_regional/phase2_met_regional_v2_daily/met_zip/
 
 # Make the out directory 
