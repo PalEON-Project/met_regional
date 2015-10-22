@@ -32,8 +32,8 @@ fillv   <- 1e+30
   # Get a list of files (should be 1 file per month)
   files <- dir(file.path(basedir,"tair"), ".nc")
 
-  if(!dir.exists(file.path(outpath, "tmin"))) dir.create(file.path(outpath, "tmax"))
-  if(!dir.exists(file.path(outpath, "tmax"))) dir.create(file.path(outpath, "tmin"))
+  if(!dir.exists(file.path(outpath, "tmin"))) dir.create(file.path(outpath, "tmin"))
+  if(!dir.exists(file.path(outpath, "tmax"))) dir.create(file.path(outpath, "tmax"))
     
   for(f in 1:length(files)){
     #format time as days since 850-01-01 midnight
