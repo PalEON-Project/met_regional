@@ -84,7 +84,7 @@ fillv   <- 1e+30
                    sprintf('%02i',mon),'.nc'))
 
     newfile_min <- nc_create( ofname_min, nc_var_min ) # Initialize file 
-    newfile_max <- nc_create( ofname_max, nc_var_min ) # Initialize file 
+    newfile_max <- nc_create( ofname_max, nc_var_max ) # Initialize file 
     
     ncatt_put( newfile_min, nc_var_min, 'days since 850', nc.time)
     ncatt_put( newfile_min, 0, 'description',"PalEON formatted Phase 1 met driver")
