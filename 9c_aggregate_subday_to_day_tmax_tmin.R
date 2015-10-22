@@ -61,7 +61,7 @@ fillv   <- 1e+30
 	dat.max <- array(dim=c(nrow(data.df), ncol(data.df), length(nc.time)))
     for(d in 1:length(nc.time)){
     	dat.min[,,d] <- apply(data.df[,,which(days == nc.time[d])], 1:2, min, na.rm=F)
-    	dat.nax[,,d] <- apply(data.df[,,which(days == nc.time[d])], 1:2, max, na.rm=F)
+    	dat.max[,,d] <- apply(data.df[,,which(days == nc.time[d])], 1:2, max, na.rm=F)
     }
  
     # Print correct units 
